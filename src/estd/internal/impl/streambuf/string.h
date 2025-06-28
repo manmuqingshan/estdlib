@@ -122,7 +122,11 @@ struct basic_stringbuf :
     // NOTE: This leaves things unlocked, so only enable this for layer1-layer3 strings
     // this implicitly is the case as we do not implement 'data()' except for scenarios
     // where locking/unlocking is a noop (or otherwise inconsequential)
-    //char_type* gptr() { return base_type::_str.data() + in_base_type::pos(); }
+    //ESTD_CPP_CONSTEXPR(17)
+    char_type* gptr()
+    {
+        return base_type::str_.data() + in_base_type::pos();
+    }
 
 
     // UNTESTED

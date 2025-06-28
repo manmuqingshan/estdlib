@@ -71,13 +71,20 @@ protected:
 
     // +++ non-locking helpers, protected so only conforming child classes expose them
 
+    // DEBT: It's OK putting this guy here, but he's a helper, not an official thing.  Would be
+    // better if we consolidated a 'capabilities' area with RFC flavor
+    static constexpr bool is_locking =
+        allocator_type::options & estd::internal::allocator_options::locking;
+
     ESTD_CPP_CONSTEXPR(17) pointer data()
     {
+        static_assert(is_locking == false, "This API would leave lock open, so disabled");
         return base_type::lock();
     }
 
     constexpr const_pointer data() const
     {
+        static_assert(is_locking == false, "This API would leave lock open, so disabled");
         return base_type::clock();
     }
 

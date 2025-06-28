@@ -223,6 +223,33 @@ TEST_CASE("streambuf")
             REQUIRE(sb.sungetc() == traits_type::eof());
         }
     }
+    SECTION("stringbuf")
+    {
+        SECTION("layer1")
+        {
+            layer1::stringbuf<32> sb1;
+
+            sb1.sputn("hi2u", 4);
+
+            SECTION("gptr")
+            {
+                const char* v = sb1.gptr();
+
+                REQUIRE(estd::layer2::const_string(v) == "hi2u");
+            }
+        }
+        SECTION("layer2")
+        {
+            layer2::basic_stringbuf<const char> sb1("hello");
+
+            SECTION("gptr")
+            {
+                const char* v = sb1.gptr();
+
+                REQUIRE(estd::layer2::const_string(v) == "hello");
+            }
+        }
+    }
     SECTION("pubsync - method finding")
     {
         struct pubsync_only_streambuf_impl : synthetic_streambuf_base
