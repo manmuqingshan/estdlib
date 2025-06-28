@@ -62,10 +62,10 @@ struct streambuf_base
     typedef typename traits_type::off_type off_type;
 
 protected:
-    inline static int sync() { return 0; }
+    static ESTD_CPP_CONSTEVAL int sync() { return 0; }
 
     // 0 = "unsure if there are characters available in the associated sequence".
-    inline static streamsize showmanyc() { return 0; }
+    static ESTD_CPP_CONSTEVAL streamsize showmanyc() { return 0; }
 
     inline static pos_type seekpos(pos_type, ios_base::openmode)
     {

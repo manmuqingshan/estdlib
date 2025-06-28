@@ -79,7 +79,8 @@ struct basic_stringbuf :
 {
     typedef out_stringbuf<String> base_type;
     using char_traits = typename remove_reference_t<String>::traits_type;
-    typedef in_pos_streambuf_base<char_traits> in_base_type;
+    using in_base_type = in_pos_streambuf_base<char_traits>;
+
     typedef typename base_type::traits_type traits_type;
     typedef typename base_type::char_type char_type;
     typedef typename traits_type::int_type int_type;
@@ -88,23 +89,23 @@ struct basic_stringbuf :
     typedef typename base_type::off_type off_type;
     typedef typename base_type::pos_type pos_type;
 
-    ESTD_CPP_FORWARDING_CTOR(basic_stringbuf)
+    using base_type::str_;
+    using in_base_type::pos;
 
-    // See in_base_type::pos() for why we use ref here
-    const typename in_base_type::index_type& pos() const { return in_base_type::pos(); }
+    ESTD_CPP_FORWARDING_CTOR(basic_stringbuf)
 
     streamsize xsgetn(char_type* s, streamsize count)
     {
-        size_type count_copied = base_type::str().copy(s, count, pos());
+        size_type count_copied = str_.copy(s, count, pos());
 
         in_base_type::gbump(count_copied);
 
         return count_copied;
     }
 
-    size_type xin_avail() const
+    constexpr size_type xin_avail() const
     {
-        return this->str_.length() - pos();
+        return str_.length() - pos();
     }
 
     streamsize showmanyc() const { return in_base_type::showmanyc(xin_avail()); }
@@ -114,19 +115,23 @@ struct basic_stringbuf :
     {
         // DEBT: May be better off using standard string indexer here.  Its fancy iterator probably
         // will optimize out
-        char_type ch = *base_type::str_.clock(pos(), 1);
-        base_type::str_.cunlock();
+        char_type ch = *str_.clock(pos(), 1);
+        str_.cunlock();
         return ch;
     }
 
-    // NOTE: This leaves things unlocked, so only enable this for layer1-layer3 strings
-    // this implicitly is the case as we do not implement 'data()' except for scenarios
-    // where locking/unlocking is a noop (or otherwise inconsequential)
-    //ESTD_CPP_CONSTEXPR(17)
-    char_type* gptr()
+    ESTD_CPP_CONSTEXPR(14) char_type* eback()
     {
-        return base_type::str_.data() + in_base_type::pos();
+        return str_.data();
     }
+
+    ESTD_CPP_CONSTEXPR(14) char_type* gptr()
+    {
+        return str_.data() + pos();
+    }
+
+    // DEBT: We still need an egptr(), just unclear whether that ought to be
+    // where null termination lives or max string
 
 
     // UNTESTED
@@ -146,7 +151,7 @@ struct basic_stringbuf :
 
             case ios_base::end:
                 if(which & ios_base::in)
-                    return in_base_type::seekpos(this->str().length() + off);
+                    return in_base_type::seekpos(str_.length() + off);
                 break;
         }
 
