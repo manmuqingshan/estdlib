@@ -7,9 +7,6 @@
 #if __cpp_variadic_templates
 namespace estd {
 
-template <class ...Types>
-using variant = internal::variant<Types...>;
-
 template <unsigned index, class ...Types>
 constexpr add_pointer_t<internal::type_at_index<index, Types...>> get_if(variant<Types...>* vs)
 {

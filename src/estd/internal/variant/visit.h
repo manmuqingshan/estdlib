@@ -5,41 +5,48 @@
 
 #include "accessors.h"
 
+#if __cplusplus >= 201703L
 namespace estd { namespace internal {
 
+// NOTE: Could have done constexpr if for different R types.  Specialization felt more
+// natural, and we're prepped for c++11 compatibility (lean on estd::variadic in that case)
 
-template <class R, class Visitor, class ...Types>
+template <class R>
 struct variant_visit
 {
-    static constexpr R visit(Visitor&& visitor, variant<Types...>& vv)
+    template <class Visitor, class Variant, size_t ...Is>
+    static constexpr R visit(Visitor &&visitor, Variant &vv, index_sequence<Is...>, bool* found)
     {
         using return_type = R;
         return_type result;
-        int counter = 0;
         const int index = vv.index();
-        bool found = ((counter++ == index ? (result = visitor(get<Types>(vv)), true) : false) || ...);
+        *found = ((Is == index ? (result = visitor(*get_ll<Is>(vv)), true) : false) || ...);
         return result;
     }
 };
 
-template <class Visitor, class ...Types>
-struct variant_visit<void, Visitor, Types...>
+template <>
+struct variant_visit<void>
 {
-    static constexpr void visit(Visitor&& visitor, variant<Types...>& vv)
+    template <class Visitor, class Variant, size_t ...Is>
+    static constexpr void visit(Visitor &&visitor, Variant &vv, index_sequence<Is...>, bool* found)
     {
-        //using intseq = index_sequence_for<Types...>;
-        int counter = 0;
         const int index = vv.index();
-        bool found = ((counter++ == index ? (visitor(estd::get<Types>(vv)), true) : false) || ...);
+        *found = ((Is == index ? (visitor(*get_ll<Is>(vv)), true) : false) || ...);
     }
-
 };
 
+}
 
 template <class Visitor, class ...Types, class R>
 constexpr R visit(Visitor&& visitor, variant<Types...>& vv)
 {
-    return variant_visit<R, Visitor, Types...>::visit(std::forward<Visitor>(visitor), vv);
+    [[maybe_unused]] bool found;
+    using indices = index_sequence_for<Types...>;
+    return internal::variant_visit<R>::visit(
+        std::forward<Visitor>(visitor), vv, indices{}, &found);
 }
 
-}}
+}
+
+#endif

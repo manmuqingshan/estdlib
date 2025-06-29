@@ -1,5 +1,6 @@
 #include <catch2/catch_all.hpp>
 
+#include <estd/string_view.h>
 #include <estd/variant.h>
 
 #include "test-data.h"
@@ -437,11 +438,38 @@ TEST_CASE("variant")
     SECTION("estd::visit")
     {
         using variant_type = variant<int, test::NonTrivial, const char*>;
+        int counter = 0;
 
         variant_type v(3);
 
-        // Almost, just need to tune accessors a bit more
-        //estd::internal::visit([](auto&&){}, v);
+        estd::visit([&](auto&& v)
+        {
+            using type = estd::remove_cvref_t<decltype(v)>;
+
+            if constexpr(is_same_v<type, int>)
+            {
+                ++counter;
+                REQUIRE(v == 3);
+            }
+        }, v);
+
+        v.emplace<2>("hello");
+
+        bool r = estd::visit([](auto&& v)
+        {
+            using type = estd::remove_cvref_t<decltype(v)>;
+
+            if constexpr(is_same_v<type, const char*>)
+            {
+                return string_view(v) == "hello";
+            }
+            else
+                return false;
+
+        }, v);
+
+        REQUIRE(counter == 1);
+        REQUIRE(r);
     }
     SECTION("experimental")
     {
