@@ -253,6 +253,8 @@ TEST_CASE("streambuf")
                 char temp[32];
 
                 sb1.sgetn(temp, 32);
+
+                REQUIRE(layer2::const_string(temp) == "hello");
             }
         }
     }

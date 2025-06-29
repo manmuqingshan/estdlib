@@ -30,19 +30,21 @@ class streambuf :
         public streambuf_baseline,
         public Impl
 {
-    typedef Impl base_type;
-    typedef streambuf<Impl, Policy> this_type;
+    using base_type = Impl;
+    using this_type = streambuf;
 
 public:
+    using typename base_type::char_type;
+    using typename base_type::traits_type;
+
     typedef Impl impl_type;
     typedef Policy policy_type;
 
-    typedef typename Impl::char_type char_type;
-    typedef typename Impl::traits_type traits_type;
     typedef typename traits_type::int_type int_type;
     typedef typename traits_type::pos_type pos_type;
     typedef typename traits_type::off_type off_type;
-    typedef typename remove_const<char_type>::type nonconst_char_type;
+
+    using nonconst_char_type = remove_const_t<char_type>;
 
     typedef internal::impl::streambuf_helper helper_type;
 

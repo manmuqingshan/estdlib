@@ -161,7 +161,9 @@ TEST_CASE("istream")
                 stream_type in(buf);
                 char buf2[32];
 
-                //in >> buf2;
+                in >> buf2;
+
+                REQUIRE(layer2::const_string(buf) == buf);
             }
             SECTION("const string")
             {
