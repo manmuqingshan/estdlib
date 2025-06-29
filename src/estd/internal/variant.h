@@ -5,6 +5,7 @@
 #include "fwd/variant.h"
 
 #include "variant/storage.h"
+#include "variant/visit.h"
 
 #if !FEATURE_ESTD_VARIANT_PERMISSIVE_ASSIGNMENT
 #error variant: strict assignment not supported yet

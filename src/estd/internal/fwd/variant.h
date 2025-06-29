@@ -43,6 +43,10 @@ type_at_index<index, Types...>* get_ll(variant<Types...>& vs) noexcept;
 template <int index, class ...Types>
 constexpr const type_at_index<index, Types...>* get_ll(const variant<Types...>& vs) noexcept;
 
+// DEBT: Only taking one variant in instead of many for the time being
+template <class Visitor, class ...Types, class R = decltype(std::declval<Visitor>()(type_at_index<0, Types...>{}))>
+constexpr R visit(Visitor&&, variant<Types...>& variant);
+
 }
 
 #else

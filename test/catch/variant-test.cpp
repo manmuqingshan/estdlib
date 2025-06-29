@@ -434,6 +434,15 @@ TEST_CASE("variant")
 
         REQUIRE(get<0>(v).val1 == 1000);
     }
+    SECTION("estd::visit")
+    {
+        using variant_type = variant<int, test::NonTrivial, const char*>;
+
+        variant_type v(3);
+
+        // Almost, just need to tune accessors a bit more
+        //estd::internal::visit([](auto&&){}, v);
+    }
     SECTION("experimental")
     {
         access_experiment<int, monostate> v(in_place_index_t<0>{}, 0);

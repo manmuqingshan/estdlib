@@ -46,8 +46,9 @@ constexpr const type_at_index<index, Types...>* get_ll(const variant<Types...>& 
     return vs.template get<index>();
 }
 
-
 }
+
+
 #else
 namespace internal {
 
