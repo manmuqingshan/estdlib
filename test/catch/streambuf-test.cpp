@@ -248,6 +248,12 @@ TEST_CASE("streambuf")
 
                 REQUIRE(estd::layer2::const_string(v) == "hello");
             }
+            SECTION("sgetn")
+            {
+                char temp[32];
+
+                sb1.sgetn(temp, 32);
+            }
         }
     }
     SECTION("pubsync - method finding")

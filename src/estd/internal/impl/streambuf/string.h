@@ -70,6 +70,7 @@ struct out_stringbuf : stringbuf_base<String>
 };
 
 
+// Implicitly basic_istringbuf
 template <class String>
 struct basic_stringbuf :
         out_stringbuf<String>,
@@ -80,9 +81,10 @@ struct basic_stringbuf :
     typedef out_stringbuf<String> base_type;
     using char_traits = typename remove_reference_t<String>::traits_type;
     using in_base_type = in_pos_streambuf_base<char_traits>;
+    using typename base_type::char_type;
+    using nonconst_pointer = estd::remove_const_t<char_type>*;
 
     typedef typename base_type::traits_type traits_type;
-    typedef typename base_type::char_type char_type;
     typedef typename traits_type::int_type int_type;
     typedef typename base_type::string_type string_type;
     typedef typename string_type::size_type size_type;
@@ -94,7 +96,7 @@ struct basic_stringbuf :
 
     ESTD_CPP_FORWARDING_CTOR(basic_stringbuf)
 
-    streamsize xsgetn(char_type* s, streamsize count)
+    streamsize xsgetn(nonconst_pointer s, streamsize count)
     {
         size_type count_copied = str_.copy(s, count, pos());
 

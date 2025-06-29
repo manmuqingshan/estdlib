@@ -435,6 +435,7 @@ TEST_CASE("variant")
 
         REQUIRE(get<0>(v).val1 == 1000);
     }
+#if __cplusplus >= 201703L
     SECTION("estd::visit")
     {
         using variant_type = variant<int, test::NonTrivial, const char*>;
@@ -471,6 +472,7 @@ TEST_CASE("variant")
         REQUIRE(counter == 1);
         REQUIRE(r);
     }
+#endif
     SECTION("experimental")
     {
         access_experiment<int, monostate> v(in_place_index_t<0>{}, 0);

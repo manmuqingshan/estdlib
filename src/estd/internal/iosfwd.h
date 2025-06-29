@@ -3,6 +3,7 @@
 #include "stream_flags.h"
 #include "fwd/streambuf.h"
 #include "locale/fwd.h"
+#include "istream/fwd.h"
 
 namespace estd {
 

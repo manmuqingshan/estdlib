@@ -145,7 +145,7 @@ TEST_CASE("istream")
         {
             const char* buf = "hi2u";
 
-            SECTION("layer2 string")
+            SECTION("layer1 string")
             {
                 using stream_type = layer2::basic_istringstream<const char>;
                 stream_type in(buf);
@@ -154,6 +154,14 @@ TEST_CASE("istream")
                 in >> buf2;
 
                 REQUIRE(buf2 == buf);
+            }
+            SECTION("C-style string")
+            {
+                using stream_type = layer2::basic_istringstream<const char>;
+                stream_type in(buf);
+                char buf2[32];
+
+                //in >> buf2;
             }
             SECTION("const string")
             {

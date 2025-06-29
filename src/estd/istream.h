@@ -17,6 +17,7 @@
 #include "port/istream.h"
 #include "internal/istream.h"
 #include "internal/istream_runtimearray.hpp"
+#include "internal/istream/operators.hpp"
 
 #include "iterator.h"
 #include "locale.h"
