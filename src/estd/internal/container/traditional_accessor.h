@@ -41,7 +41,7 @@ public:
 
     ESTD_CPP_CONSTEXPR(17) reference lock() { return *p; }
     constexpr const_reference lock() const { return *p; }
-    static ESTD_CPP_CONSTEVAL void unlock() {}
+    static ESTD_CPP_CONSTEXPR(14) void unlock() {}
 };
 
 }

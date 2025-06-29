@@ -38,8 +38,8 @@ public:
 
     ESTD_CPP_CONSTEXPR(17) locked_type lock() { return impl_.lock(); }
     constexpr const_locked_type clock() const { return impl_.lock(); }
-    constexpr void unlock() { return impl_.unlock(); }
-    constexpr void cunlock() const { return impl_.unlock(); }
+    ESTD_CPP_CONSTEXPR(14) void unlock() { return impl_.unlock(); }
+    ESTD_CPP_CONSTEXPR(14) void cunlock() const { return impl_.unlock(); }
 
     // DEBT: Needs filtering
     // DEBT: Leaves unlocked!

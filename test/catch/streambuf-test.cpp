@@ -7,6 +7,7 @@
 #include <estd/istream.h>
 #include <estd/ostream.h>
 #include <estd/string.h>
+#include <estd/string_view.h>
 #include <estd/sstream.h>
 
 using namespace estd;
@@ -252,9 +253,12 @@ TEST_CASE("streambuf")
             {
                 char temp[32];
 
-                sb1.sgetn(temp, 32);
+                int count = sb1.sgetn(temp, 32);
 
-                REQUIRE(layer2::const_string(temp) == "hello");
+                REQUIRE(count == 5);
+                // FIX: span-ish behavior not quite working here
+                //REQUIRE(layer2::string<5, false>(temp) == "hello");
+                REQUIRE(layer2::string<>(temp, 5) == "hello");
             }
         }
     }

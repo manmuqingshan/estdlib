@@ -17,6 +17,8 @@ public:
     // for iterators
     static constexpr bool is_locking() { return false; }
 
+    static constexpr estd::internal::allocator_options options{};
+
 #ifdef FEATURE_ESTD_ALLOCATOR_LOCKCOUNTER
     typedef typename estd::nothing_allocator<T>::lock_counter lock_counter;
 #endif

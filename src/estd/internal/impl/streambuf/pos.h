@@ -24,17 +24,15 @@ struct pos_streambuf_base : streambuf_base<CharTraits>
     typedef typename traits_type::off_type off_type;
 
 protected:
-    index_type _pos;
+    index_type pos_;
 
-#ifdef __cpp_rvalue_references
-    explicit pos_streambuf_base(index_type&& pos) : _pos(std::move(pos)) {}
-#endif
-    EXPLICIT pos_streambuf_base(const index_type& pos) : _pos(pos) {}
+    constexpr explicit pos_streambuf_base(index_type&& pos) : pos_(std::move(pos)) {}
+    constexpr explicit pos_streambuf_base(const index_type& pos) : pos_(pos) {}
 
     inline const index_type& seekpos(const pos_type& p)
     {
-        _pos = p;
-        return _pos;
+        pos_ = p;
+        return pos_;
     }
 
     // DEBT: This is an underlying call, notice the lack of inspection of 'openmode'.  This in
@@ -50,7 +48,7 @@ protected:
                 return seekpos(off);
 
             case ios_base::cur:
-                _pos += off;
+                pos_ += off;
                 return pos();
 
             default:
@@ -64,7 +62,7 @@ public:
     // This method in particular is sensitive to pos_type reference.  Stack usage goes
     // sky high if we return a copy
 
-    ESTD_CPP_CONSTEXPR_RET const index_type& pos() const { return _pos; }
+    constexpr const index_type& pos() const { return pos_; }
 };
 
 template <typename CharTraits, class Index = unsigned short>
@@ -76,13 +74,11 @@ struct in_pos_streambuf_base : pos_streambuf_base<CharTraits, Index>
     typedef typename base_type::pos_type pos_type;
     typedef typename base_type::off_type off_type;
 
-#ifdef FEATURE_CPP_MOVESEMANTIC
-    EXPLICIT in_pos_streambuf_base(index_type&& pos) : base_type(std::move(pos)) {}
-#endif
-    EXPLICIT in_pos_streambuf_base(const index_type& pos = 0) : base_type(pos) {}
+    constexpr explicit in_pos_streambuf_base(index_type&& pos) : base_type(std::move(pos)) {}
+    constexpr explicit in_pos_streambuf_base(const index_type& pos = 0) : base_type(pos) {}
 
 protected:
-    void gbump(int count) { this->_pos += count; }
+    void gbump(int count) { this->pos_ += count; }
 
     inline pos_type seekoff(off_type off, ios_base::seekdir way,
                             ios_base::openmode which = ios_base::in | ios_base::out)
@@ -99,19 +95,17 @@ protected:
 template <typename CharTraits, class Index = unsigned short>
 struct out_pos_streambuf_base : pos_streambuf_base<CharTraits, Index>
 {
-    typedef pos_streambuf_base<CharTraits, Index> base_type;
+    using base_type = pos_streambuf_base<CharTraits, Index>;
     using typename base_type::traits_type;
     typedef typename base_type::pos_type pos_type;
     typedef typename base_type::off_type off_type;
     typedef typename base_type::index_type index_type;
 
-#ifdef FEATURE_CPP_MOVESEMANTIC
-    EXPLICIT out_pos_streambuf_base(index_type&& pos) : base_type(std::move(pos)) {}
-#endif
-    EXPLICIT out_pos_streambuf_base(const index_type& pos = 0) : base_type(pos) {}
+    constexpr explicit out_pos_streambuf_base(index_type&& pos) : base_type(std::move(pos)) {}
+    constexpr explicit out_pos_streambuf_base(const index_type& pos = 0) : base_type(pos) {}
 
 protected:
-    void pbump(int count) { this->_pos += count; }
+    void pbump(int count) { this->pos_ += count; }
 
     inline pos_type seekoff(off_type off, ios_base::seekdir way,
                             ios_base::openmode which = ios_base::in | ios_base::out)
