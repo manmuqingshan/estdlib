@@ -164,6 +164,13 @@ TEST_CASE("string_view")
         REQUIRE(s.ends_with("llo"));
         REQUIRE(s.ends_with(string_view("ello")));
     }
+    SECTION("emtpy")
+    {
+        string_view s = "hello";
+
+        // See https://github.com/malachi-iot/estdlib/issues/120
+        //REQUIRE(!s.empty());
+    }
 }
 
 

@@ -38,6 +38,7 @@ build-catch-*/
 src/build/
 test/**/build/
 *.user
+CMakeLists.txt.user*
 build-*/
 
 # Visual Studio specific

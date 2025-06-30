@@ -100,6 +100,7 @@ TEST_CASE("string tests")
                 int sz = sizeof(s);
 
                 REQUIRE(s.length() == 0);
+                REQUIRE(s.empty());
 
                 s += test_str;
 
@@ -189,20 +190,15 @@ TEST_CASE("string tests")
         }
         SECTION("absolute length")
         {
-            char s[128];
-
-            strcpy(s, test_str2);
-
-            layer2::string<4, false> str(s);
+            layer2::basic_string<const char, 4, false> str(test_str2);
 
             auto size = str.size();
             auto length = str.length();
 
-            // FIX: size comes out to be 0, which is wrong
-            // Needs to use 'dynamic_array_length<TAllocator, false, true>' but instead is using
-            // 'dynamic_array_length<TAllocator, false, false>'
-            //REQUIRE(size == 4);
-            //REQUIRE(length == 4);
+            REQUIRE(size == 4);
+            REQUIRE(length == 4);
+
+            REQUIRE(str == test_str2);
         }
         SECTION("make_string (experimental)")
         {
