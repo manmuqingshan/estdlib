@@ -51,9 +51,6 @@ struct visit_tuple_functor
     }
 };
 
-template <size_t I>
-using visitor_index = in_place_index_t<I>;
-
 template <class T>
 struct visitor_instance : in_place_type_t<T>
 {
@@ -166,15 +163,16 @@ inline namespace v1 {
 // DEBT: Not a great name, seeing as it interacts with 'value_visitor'
 template <size_t I, class T, T v>
 struct visitor_value :
-    internal::visitor_index<I>,
+    in_place_index_t<I>,
     integral_constant<T, v>
 {
-
+    // Needed to soften 'explicit' in_place_index_t
+    constexpr visitor_value() = default;
 };
 
 template <size_t I, class T>
 struct visitor_index :
-    internal::visitor_index<I>,
+    in_place_index_t<I>,
     in_place_type_t<T>,
     type_identity<T>
 {
