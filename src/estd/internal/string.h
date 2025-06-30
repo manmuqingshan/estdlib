@@ -50,7 +50,7 @@ public:
 
     using typename base_type::allocator_type;
     using policy_type = typename base_type::impl_type::policy_type;
-    typedef typename policy_type::char_traits traits_type;
+    using traits_type = typename policy_type::char_traits ;
 
     static constexpr auto npos = (size_type) -1;
 

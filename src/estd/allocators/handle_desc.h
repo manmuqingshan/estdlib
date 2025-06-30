@@ -146,6 +146,12 @@ public:
     ESTD_CPP_CONSTEXPR_RET size_type max_size() const
     { return base_type::get_allocator().max_size(); }
 
+    // DEBT: Feels like the wrong place to put this, but not harmful
+    constexpr bool empty() const
+    {
+        return base_type::get_allocator().size(base_type::handle()) == 0;
+    }
+
     typename TTraits::handle_with_offset offset(size_type pos) const
     {
         return base_type::get_allocator().offset(

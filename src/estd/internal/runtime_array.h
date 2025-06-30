@@ -346,12 +346,12 @@ public:
         return create_accessor(size() - 1);
     }
 
-    ESTD_CPP_CONSTEXPR_RET size_type max_size() const
+    constexpr size_type max_size() const
     {
         return m_impl.max_size();
     }
 
-    ESTD_CPP_CONSTEXPR_RET bool empty() const
+    constexpr bool empty() const
     {
         return m_impl.empty();
     }

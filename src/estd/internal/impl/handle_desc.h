@@ -52,15 +52,16 @@ struct contiguous_descriptor<Allocator, true>
 
 // https://en.cppreference.com/w/cpp/language/ebo we can have specialized base classes which are empty
 // and don't hurt our sizing
-template <class TAllocator, bool is_stateful = estd::is_empty<TAllocator>::value>
+// 30JUN25 MB DEBT: https://github.com/malachi-iot/estdlib/issues/129
+template <class Allocator, bool is_stateful = estd::is_empty<Allocator>::value>
 class allocator_descriptor;
 
 
-// TAllocator could be a ref here
-template <class TAllocator>
-class allocator_descriptor<TAllocator, true>
+// Allocator could be a ref here
+template <class Allocator>
+class allocator_descriptor<Allocator, true>
 {
-    TAllocator allocator;
+    Allocator allocator;
 
 protected:
     ESTD_CPP_FORWARDING_CTOR_MEMBER(allocator_descriptor, allocator)
@@ -70,7 +71,7 @@ protected:
     ESTD_CPP_DEFAULT_CTOR(allocator_descriptor)
 
 public:
-    typedef typename remove_reference<TAllocator>::type allocator_type;
+    typedef typename remove_reference<Allocator>::type allocator_type;
     typedef typename allocator_type::handle_with_offset handle_with_offset;
     typedef typename allocator_type::handle_type handle_type;
     typedef typename allocator_type::size_type size_type;
@@ -79,18 +80,18 @@ public:
     // Would be nice if we could const this, but for stateful allocators that's not reasonable
     allocator_type& get_allocator() { return allocator; }
 
-    const allocator_type& get_allocator() const { return allocator; }
+    constexpr const allocator_type& get_allocator() const { return allocator; }
 
 protected:
     typedef allocator_type& allocator_ref;
 };
 
 
-template <class TAllocator>
-class allocator_descriptor<TAllocator, false>
+template <class Allocator>
+class allocator_descriptor<Allocator, false>
 {
 public:
-    typedef typename remove_reference<TAllocator>::type allocator_type;
+    typedef typename remove_reference<Allocator>::type allocator_type;
     typedef typename estd::allocator_traits<allocator_type> allocator_traits;
     typedef allocator_type allocator_ref;
     typedef typename allocator_type::size_type size_type;
@@ -113,12 +114,12 @@ protected:
 };
 
 
-template <class TAllocator, bool is_singular,
-        class TTraits = estd::allocator_traits<typename remove_reference<TAllocator>::type> >
+template <class Allocator, bool is_singular,
+        class Traits = estd::allocator_traits<typename remove_reference<Allocator>::type> >
 class handle_descriptor :
-        value_evaporator<typename TTraits::handle_type, !is_singular, bool, true>
+        value_evaporator<typename Traits::handle_type, !is_singular, bool, true>
 {
-    typedef TTraits allocator_traits;
+    typedef Traits allocator_traits;
     typedef typename allocator_traits::value_type value_type;
     typedef typename allocator_traits::size_type size_type;
 

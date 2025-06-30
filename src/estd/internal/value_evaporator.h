@@ -27,7 +27,7 @@ protected:
     value_evaporator(TEvaporated, bool) {}
 
 public:
-    TEvaporated value() const { return default_value; }
+    constexpr TEvaporated value() const { return default_value; }
 
     static CONSTEXPR bool is_evaporated = true;
 
