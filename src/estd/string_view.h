@@ -10,8 +10,9 @@ class basic_string_view :
     public detail::basic_string<internal::impl::allocated_array<
         layer3::allocator<const typename Policy::char_traits::char_type, typename Policy::size_type>, Policy>>
 {
+    using traits_type = typename Policy::char_traits;
     using base_type = detail::basic_string<internal::impl::allocated_array<
-        layer3::allocator<const typename Policy::char_traits::char_type, typename Policy::size_type>, Policy>>;
+        layer3::allocator<const typename traits_type::char_type, typename Policy::size_type>, Policy>>;
 
     typedef typename base_type::allocator_type allocator_type;
 
@@ -44,7 +45,7 @@ public:
 
     // C-style null terminated string
     constexpr basic_string_view(const_pointer s) :
-        base_type(init_param_t(s, strlen(s)))
+        base_type(init_param_t(s, traits_type::length(s)))
     {
 
     }

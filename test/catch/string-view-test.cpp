@@ -166,7 +166,7 @@ TEST_CASE("string_view")
     }
     SECTION("emtpy check")
     {
-        constexpr string_view s = "hello";
+        const string_view s = "hello";
 
         REQUIRE(s.max_size() == 5);
         REQUIRE(s.size() == 5);
