@@ -52,10 +52,7 @@ struct visit_tuple_functor
 };
 
 template <size_t I>
-struct visitor_index : in_place_index_t<I>
-{
-    static constexpr size_t index = I;
-};
+using visitor_index = in_place_index_t<I>;
 
 template <class T>
 struct visitor_instance : in_place_type_t<T>

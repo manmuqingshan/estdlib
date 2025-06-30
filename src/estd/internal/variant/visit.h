@@ -14,22 +14,39 @@ namespace estd { namespace internal {
 template <class R>
 struct variant_visit
 {
-    template <class Visitor, class Variant, size_t ...Is>
-    static constexpr R visit(Visitor &&visitor, Variant &vv, index_sequence<Is...>, bool* found)
+    // DEBT: Upgrade variadic visit to do fold expressions (when c++17)
+    template <class Visitor, class Index, size_t ...Is>
+    static constexpr R visit_index(Visitor&& visitor, Index index, index_sequence<Is...>, bool* found)
     {
         using return_type = R;
         return_type result;
-        const int index = vv.index();
-        *found = ((Is == index ? (result = visitor(*get_ll<Is>(vv)), true) : false) || ...);
+        *found = ((Is == index ? (result = visitor(in_place_index<Is>), true) : false) || ...);
         return result;
+    }
+
+    template <class Visitor, class Variant, size_t ...Is>
+    static constexpr R visit(Visitor&& visitor, Variant& vv, index_sequence<Is...>, bool* found)
+    {
+        return visit_index([&](auto vi)
+            {
+                return visitor(*get_ll<vi.index>(vv));
+            },
+            vv.index(), index_sequence<Is...>{}, found);
     }
 };
 
 template <>
 struct variant_visit<void>
 {
+    // DEBT: Upgrade variadic visit to do fold expressions (when c++17)
+    template <class Visitor, class Index, size_t ...Is>
+    static constexpr void visit_index(Visitor&& visitor, Index index, index_sequence<Is...>, bool* found)
+    {
+        *found = ((Is == index ? (visitor(in_place_index<Is>), true) : false) || ...);
+    }
+
     template <class Visitor, class Variant, size_t ...Is>
-    static constexpr void visit(Visitor &&visitor, Variant &vv, index_sequence<Is...>, bool* found)
+    static constexpr void visit(Visitor&& visitor, Variant& vv, index_sequence<Is...>, bool* found)
     {
         const int index = vv.index();
         *found = ((Is == index ? (visitor(*get_ll<Is>(vv)), true) : false) || ...);

@@ -24,10 +24,21 @@ struct in_place_type_t : internal::in_place_tag
     constexpr explicit in_place_type_t() = default;
 };
 
-template <size_t>
+template <size_t I>
 struct in_place_index_t : internal::in_place_tag
 {
+    // Non-standard, but harmless.  estd::variadic picks this up
+    static constexpr size_t index = I;
+
     constexpr explicit in_place_index_t() = default;
 };
+
+#if __cpp_constexpr >= 201304L
+template <class T>
+constexpr in_place_type_t<T> in_place_type {};
+
+template <size_t I>
+constexpr in_place_index_t<I> in_place_index {};
+#endif
 
 }
