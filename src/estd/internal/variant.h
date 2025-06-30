@@ -4,6 +4,7 @@
 #include "fwd/functional.h"
 #include "fwd/variant.h"
 
+#include "variant/accessors.h"
 #include "variant/storage.h"
 #include "variant/visit.h"
 
@@ -22,39 +23,6 @@ namespace estd {
 #if __cpp_variadic_templates
 
 namespace internal {
-
-template <size_t index, class ...Types>
-constexpr bool holds_index(const variant<Types...>* vs)
-{
-    return vs != nullptr && vs->index() == index;
-}
-
-
-template <class T, class ...Types>
-constexpr bool holds_type(const variant<Types...>* vs)
-{
-    typedef select_type<T, Types...> selected;
-
-    // NOTE: size() check is redundant, because compile time check for 'first()' below fails
-    // if no items are present.  This does not clash with spec, which indicates
-    // this is "ill-formed if T is not a unique element"
-    return selected::size() != 0 &&
-           (vs != nullptr && vs->index() == selected::first::index);
-}
-
-
-
-
-template <int index, class ...Types>
-void assert_index_matches(const variant<Types...>& v)
-{
-#if __cpp_exceptions
-    if(v.index() != index) throw bad_variant_access();
-#else
-    // NOTE: Not tested yet
-    if(v.index() != index) std::abort();
-#endif
-}
 
 template <class ...Types>
 class variant : protected variant_storage<Types...>

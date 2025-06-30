@@ -384,9 +384,13 @@ TEST_CASE("unordered")
         {
             const_iter it = map.find(1);
 
-            bool b = it->second == 0;
+            REQUIRE(it == map.cend());
 
-            REQUIRE(b);
+            map[1] = 3;
+
+            it = map.find(1);
+
+            REQUIRE(it->second == 3);
         }
     }
     SECTION("synthetic retry")
