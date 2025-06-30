@@ -487,11 +487,27 @@ TEST_CASE("variant")
         // Clever black magic from https://en.cppreference.com/w/cpp/utility/variant/visit2.html
         int r2 = estd::visit(overloaded
         {
-            [](auto) { return 0; },
+            [](const auto&) { return 0; },
             [&](int v){ return v * counter; }
         }, v);
 
         REQUIRE(r2 == 20);
+
+        variant_type v1{20};
+
+        counter = 0;
+
+        estd::visit(
+            [&]<typename T>(const T& v)
+            {
+                if constexpr(is_same_v<T, int>)
+                {
+                    counter += v;
+                }
+            },
+            v, v1);
+
+        REQUIRE(counter == 30);
     }
 #endif
     SECTION("experimental")

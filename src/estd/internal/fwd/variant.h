@@ -5,8 +5,6 @@
 
 namespace estd {
 
-#if __cpp_variadic_templates
-
 template <class T>
 struct variant_size;
 
@@ -43,30 +41,18 @@ type_at_index<index, Types...>* get_ll(variant<Types...>& vs) noexcept;
 template <int index, class ...Types>
 constexpr const type_at_index<index, Types...>* get_ll(const variant<Types...>& vs) noexcept;
 
+// DEBT: Only taking one variant in instead of many for the time being
+template <class Visitor, class ...Types,
+    class R = decltype(std::declval<Visitor>()(std::declval<type_at_index<0, Types...>>()))>
+constexpr R visit(Visitor&&, variant<Types...>& variant);
+
+
 }
 
 template <class ...Types>
 using variant = internal::variant<Types...>;
 
-
-// DEBT: Only taking one variant in instead of many for the time being
-template <class Visitor, class ...Types,
-    class R = decltype(std::declval<Visitor>()(internal::type_at_index<0, Types...>{}))>
-constexpr R visit(Visitor&&, variant<Types...>& variant);
-
-
-#else
-
-namespace internal {
-
-template <bool trivial, class T1, class T2, class T3>
-union variant_union;
-
-template <class T1 = void, class T2 = void, class T3 = void>
-struct variant_storage;
-
-}
-
-#endif
+template <class Visitor, class ...Variants>
+constexpr auto visit(Visitor&&, Variants&&...);
 
 }

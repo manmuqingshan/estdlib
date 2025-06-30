@@ -36,16 +36,33 @@ struct variant_visit<void>
     }
 };
 
-}
-
 template <class Visitor, class ...Types, class R>
 constexpr R visit(Visitor&& visitor, variant<Types...>& vv)
 {
     [[maybe_unused]] bool found;
     using indices = index_sequence_for<Types...>;
-    return internal::variant_visit<R>::visit(
+    return variant_visit<R>::visit(
         std::forward<Visitor>(visitor), vv, indices{}, &found);
 }
+
+}
+
+template <class Visitor>
+constexpr void visit(Visitor&&) { }
+
+template <class Visitor, class Variant, class ...Variants>
+constexpr auto visit(Visitor&& visitor, Variant& variant, Variants&&... variants)
+{
+    // DEBT: Unclear how to aggregate return types, so not even trying.  Also, I bet
+    // order is incorrect here.  This means UB for multiple variants who have a return
+    // type
+    visit(std::forward<Visitor>(visitor), std::forward<Variants>(variants)...);
+
+    return internal::visit(
+        std::forward<Visitor>(visitor),
+        variant);
+}
+
 
 }
 
