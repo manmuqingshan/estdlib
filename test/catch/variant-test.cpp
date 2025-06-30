@@ -69,7 +69,12 @@ struct dummy_visitor
     }
 };
 
-
+// Clever black magic from https://en.cppreference.com/w/cpp/utility/variant/visit2.html
+template<class... Ts>
+struct overloaded : Ts... { using Ts::operator()...; };
+// explicit deduction guide (not needed as of C++20)
+template<class... Ts>
+overloaded(Ts...) -> overloaded<Ts...>;
 
 TEST_CASE("variant")
 {
@@ -454,14 +459,17 @@ TEST_CASE("variant")
             }
         }, v);
 
+        REQUIRE(counter == 1);
+
         v.emplace<2>("hello");
 
-        bool r = estd::visit([](auto&& v)
+        bool r = estd::visit([&](auto&& v)
         {
             using type = estd::remove_cvref_t<decltype(v)>;
 
             if constexpr(is_same_v<type, const char*>)
             {
+                ++counter;
                 return string_view(v) == "hello";
             }
             else
@@ -469,8 +477,19 @@ TEST_CASE("variant")
 
         }, v);
 
-        REQUIRE(counter == 1);
+        REQUIRE(counter == 2);
         REQUIRE(r);
+
+        v.emplace<int>(10);
+
+        // Clever black magic from https://en.cppreference.com/w/cpp/utility/variant/visit2.html
+        int r2 = estd::visit(overloaded
+        {
+            [](auto) { return 0; },
+            [&](int v){ return v * counter; }
+        }, v);
+
+        REQUIRE(r2 == 20);
     }
 #endif
     SECTION("experimental")
