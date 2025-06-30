@@ -171,6 +171,17 @@ TEST_CASE("istream")
                 layer2::const_string v("hello");
                 stream_type in(v);
             }
+            SECTION("read")
+            {
+                using stream_type = layer2::basic_istringstream<const char>;
+                stream_type in("hello");
+
+                char temp[32] {};
+
+                in.read(temp, 5);
+
+                REQUIRE(layer2::const_string(temp) == "hello");
+            }
             SECTION("string view")
             {
                 using stream_type = layer2::basic_istringstream<const char>;

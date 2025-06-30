@@ -16,10 +16,12 @@ class basic_istream : public
 #endif
                       Base
 {
-    typedef Base base_type;
+    using base_type = Base;
+    using this_type = basic_istream;
 
 public:
-    typedef typename base_type::char_type char_type;
+    using typename base_type::char_type;
+
     typedef typename base_type::streambuf_type streambuf_type;
     typedef typename streambuf_type::off_type off_type;
     typedef typename streambuf_type::traits_type traits_type;
@@ -27,6 +29,8 @@ public:
 
     typedef typename base_type::locale_type locale_type;
     typedef typename base_type::blocking_type blocking_type;
+
+    using nonconst_char_type = remove_const_t<char_type>;
 
 private:
     inline int_type standard_peek()
@@ -70,15 +74,13 @@ private:
     }
 #endif
 
-    typedef basic_istream<Streambuf, Base> __istream_type;
-
     // just a formality for now, to prep for if we ever want a real sentry
     struct sentry
     {
         typedef typename streambuf_type::traits_type traits_type;
-        __istream_type& is;
+        this_type& is;
 
-        sentry(__istream_type& is, bool noskipws = false) : is(is) {}
+        sentry(this_type& is, bool noskipws = false) : is(is) {}
 
         operator bool() const
         {
@@ -113,7 +115,7 @@ public:
     }
 
     // UNTESTED
-    __istream_type& unget()
+    this_type& unget()
     {
 #if FEATURE_ESTD_IOS_GCOUNT
         _gcount = 0;
@@ -124,7 +126,7 @@ public:
         return *this;
     }
 
-    __istream_type& seekg(off_type off, ios_base::seekdir dir)
+    this_type& seekg(off_type off, ios_base::seekdir dir)
     {
         this->unsetstate(ios_base::failbit);
         this->rdbuf()->pubseekoff(off, dir, ios_base::in);
@@ -134,7 +136,7 @@ public:
 
     // nonblocking read
     // Only lightly tested
-    streamsize readsome(char_type* s, streamsize count)
+    streamsize readsome(nonconst_char_type* s, streamsize count)
     {
         streambuf_type& rdbuf = *(this->rdbuf());
         // if count > number of available bytes
@@ -148,7 +150,7 @@ public:
         return rdbuf.sgetn(s, m);
     }
 
-    __istream_type& read(char_type* s, streamsize n)
+    this_type& read(nonconst_char_type* s, streamsize n)
     {
         // TODO: optimization point.  We want to do something
         // so that we don't inline this (and other read/write operations like it)
@@ -165,7 +167,7 @@ public:
     }
 
     // TODO: optimize, ensure this isn't inlined
-    __istream_type& getline(char_type* s, streamsize count, char_type delim = '\n')
+    this_type& getline(nonconst_char_type* s, streamsize count, char_type delim = '\n')
     {
         streambuf_type* stream = this->rdbuf();
 
