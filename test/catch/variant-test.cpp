@@ -49,7 +49,7 @@ struct access_experiment : protected internal::variant_storage<Types...>
 
     // No dice, because implicit cast down to variant_storage happens "just before" call
     template <int I, class ...Types2>
-    friend internal::type_at_index<I, Types2...>& estd::internal::get(internal::variant_storage<Types2...>& vs);
+    friend inline ESTD_CPP_CONSTEXPR(14) internal::type_at_index<I, Types2...>& estd::internal::get(internal::variant_storage<Types2...>& vs);
 };
 
 

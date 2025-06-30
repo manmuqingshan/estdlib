@@ -41,19 +41,19 @@ void assert_index_matches(const variant<Types...>& v)
 }
 
 template <int index, class ...Types>
-type_at_index<index, Types...>& get(variant_storage<Types...>& vs)
+inline ESTD_CPP_CONSTEXPR(14) type_at_index<index, Types...>& get(variant_storage<Types...>& vs)
 {
     return * vs.template get<index>();
 }
 
 template <int index, class ...Types>
-const type_at_index<index, Types...>& get(const variant_storage<Types...>& vs)
+constexpr const type_at_index<index, Types...>& get(const variant_storage<Types...>& vs)
 {
     return * vs.template get<index>();
 }
 
 template <class T, class ...Types>
-T& get(variant_storage<Types...>& vs)
+inline ESTD_CPP_CONSTEXPR(14) T& get(variant_storage<Types...>& vs)
 {
     return * vs.template get<T>();
 }
@@ -67,7 +67,7 @@ constexpr const T& get(const variant_storage<Types...>& vs)
 
 // Bypasses runtime index check
 template <int index, class ...Types>
-type_at_index<index, Types...>* get_ll(variant<Types...>& vs) noexcept
+inline ESTD_CPP_CONSTEXPR(14) type_at_index<index, Types...>* get_ll(variant<Types...>& vs) noexcept
 {
     return vs.template get<index>();
 }
@@ -82,7 +82,7 @@ constexpr const type_at_index<index, Types...>* get_ll(const variant<Types...>& 
 }
 
 template <int index, class ...Types>
-internal::type_at_index<index, Types...>& get(variant<Types...>& v)
+inline ESTD_CPP_CONSTEXPR(14) internal::type_at_index<index, Types...>& get(variant<Types...>& v)
 {
     internal::assert_index_matches<index>(v);
 
@@ -108,7 +108,7 @@ internal::type_at_index<index, Types...>&& get(variant<Types...>&& v)
 
 
 template <class T, class ...Types>
-constexpr T& get(variant<Types...>& v)
+inline ESTD_CPP_CONSTEXPR(14) T& get(variant<Types...>& v)
 {
     return get<internal::select_type<T, Types...>::first::index>(v);
 }

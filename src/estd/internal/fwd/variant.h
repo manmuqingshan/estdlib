@@ -36,23 +36,23 @@ template <class ...T>
 using variant_storage = variant_storage_base<are_trivial<T...>::value, T...>;
 
 template <int index, class ...Types>
-type_at_index<index, Types...>* get_ll(variant<Types...>& vs) noexcept;
+inline ESTD_CPP_CONSTEXPR(14) type_at_index<index, Types...>* get_ll(variant<Types...>& vs) noexcept;
 
 template <int index, class ...Types>
 constexpr const type_at_index<index, Types...>* get_ll(const variant<Types...>& vs) noexcept;
 
-// DEBT: Only taking one variant in instead of many for the time being
 template <class Visitor, class ...Types,
     class R = decltype(std::declval<Visitor>()(std::declval<type_at_index<0, Types...>>()))>
 constexpr R visit(Visitor&&, variant<Types...>& variant);
-
 
 }
 
 template <class ...Types>
 using variant = internal::variant<Types...>;
 
+#if __cplusplus >= 201703L
 template <class Visitor, class ...Variants>
 constexpr auto visit(Visitor&&, Variants&&...);
+#endif
 
 }

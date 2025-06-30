@@ -143,7 +143,7 @@ class variant : protected variant_storage<Types...>
     // These friends are necessary because we plan to make variant_storage base
     // protected
     template <int index, class ...Types2>
-    friend type_at_index<index, Types2...>* get_ll(variant<Types2...>& vs) noexcept;
+    friend inline ESTD_CPP_CONSTEXPR(14) type_at_index<index, Types2...>* get_ll(variant<Types2...>& vs) noexcept;
 
     template <int index, class ...Types2>
     friend constexpr const type_at_index<index, Types2...>* get_ll(const variant<Types2...>& vs) noexcept;
