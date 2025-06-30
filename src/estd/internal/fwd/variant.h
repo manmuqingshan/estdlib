@@ -45,6 +45,10 @@ template <class Visitor, class ...Types,
     class R = decltype(std::declval<Visitor>()(std::declval<type_at_index<0, Types...>>()))>
 constexpr R visit(Visitor&&, variant<Types...>& variant);
 
+template <class Visitor, class ...Types,
+    class R = decltype(std::declval<Visitor>()(std::declval<type_at_index<0, Types...>>()))>
+constexpr R visit(Visitor&&, const variant<Types...>& variant);
+
 }
 
 template <class ...Types>

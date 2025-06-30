@@ -64,6 +64,17 @@ constexpr R visit(Visitor&& visitor, variant<Types...>& vv)
         indices{}, &found);
 }
 
+template <class Visitor, class ...Types, class R>
+constexpr R visit(Visitor&& visitor, const variant<Types...>& vv)
+{
+    [[maybe_unused]] bool found;
+    using indices = index_sequence_for<Types...>;
+    return variant_visit<R>::visit(
+        std::forward<Visitor>(visitor),
+        vv,
+        indices{}, &found);
+}
+
 }
 
 template <class Visitor>
