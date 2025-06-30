@@ -70,7 +70,7 @@ struct out_stringbuf : stringbuf_base<String>
 };
 
 
-// Implicitly basic_istringbuf
+// Implicitly basic_istringbuf, but does some out basic_ostringbuf things too
 template <class String>
 struct basic_stringbuf :
         out_stringbuf<String>,
@@ -81,6 +81,7 @@ struct basic_stringbuf :
     typedef out_stringbuf<String> base_type;
     using char_traits = typename remove_reference_t<String>::traits_type;
     using in_base_type = in_pos_streambuf_base<char_traits>;
+    using typename in_base_type::index_type;
     using typename base_type::char_type;
     using nonconst_pointer = estd::remove_const_t<char_type>*;
 
@@ -110,6 +111,15 @@ struct basic_stringbuf :
         return str_.length() - pos();
     }
 
+    ESTD_CPP_CONSTEXPR(14) index_type seekpos(const pos_type& p,
+        ios_base::openmode which)
+    {
+        // DEBT: Only 'in' seeking supported
+        if(which & ios_base::out)    return -1;
+
+        return in_base_type::seekpos(p);
+    }
+
     streamsize showmanyc() const { return in_base_type::showmanyc(xin_avail()); }
 
 
@@ -136,28 +146,12 @@ struct basic_stringbuf :
     // where null termination lives or max string
 
 
-    // UNTESTED
-    pos_type seekoff(off_type off, ios_base::seekdir dir, ios_base::openmode which)
+    pos_type seekoff(off_type off, ios_base::seekdir dir, ios_base::openmode which) // NOLINT
     {
-        switch(dir)
-        {
-            case ios_base::beg:
-                if(which & ios_base::in)
-                    return in_base_type::seekpos(off);
-                break;
+        // DEBT: Only 'in' seeking supported
+        if(which & ios_base::out)    return -1;
 
-            case ios_base::cur:
-                if(which & ios_base::in)
-                    in_base_type::gbump(off);
-                break;
-
-            case ios_base::end:
-                if(which & ios_base::in)
-                    return in_base_type::seekpos(str_.length() + off);
-                break;
-        }
-
-        return pos_type(off_type(-1));
+        return in_base_type::seekoff(off, dir);
     }
 
     int_type sungetc()

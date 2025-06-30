@@ -29,10 +29,9 @@ protected:
     constexpr explicit pos_streambuf_base(index_type&& pos) : pos_(std::move(pos)) {}
     constexpr explicit pos_streambuf_base(const index_type& pos) : pos_(pos) {}
 
-    inline const index_type& seekpos(const pos_type& p)
+    ESTD_CPP_CONSTEXPR(14) const index_type& seekpos(const pos_type& p)
     {
-        pos_ = p;
-        return pos_;
+        return pos_ = p;
     }
 
     // DEBT: This is an underlying call, notice the lack of inspection of 'openmode'.  This in
@@ -48,8 +47,7 @@ protected:
                 return seekpos(off);
 
             case ios_base::cur:
-                pos_ += off;
-                return pos();
+                return pos_ += off;
 
             default:
                 return pos_type(off_type(-1));

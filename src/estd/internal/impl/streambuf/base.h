@@ -18,6 +18,9 @@ template <ESTD_CPP_CONCEPT(concepts::v1::CharTraits) Traits, class Signal>
 struct streambuf_base
 {
 #if FEATURE_ESTD_STREAMBUF_TRAITS
+    // 29JUN25 MB - NOTE: This has been disabled for a while but was coming along before I disabled it.
+    // Consider strongly changing blocking, ncopy etc. to rfc category.  Alternatively, a freestanding
+    // 'policy' to do those rfc indications could be interesting and avoid reinterpreting meaning of 'traits'
     struct traits_type : Traits
     {
         // Since we deal with specialization, sometimes folks need the plain and pure char_traits
@@ -67,12 +70,12 @@ protected:
     // 0 = "unsure if there are characters available in the associated sequence".
     static ESTD_CPP_CONSTEVAL streamsize showmanyc() { return 0; }
 
-    inline static pos_type seekpos(pos_type, ios_base::openmode)
+    static ESTD_CPP_CONSTEVAL pos_type seekpos(pos_type, ios_base::openmode)
     {
         return pos_type(off_type(-1));
     };
 
-    inline static pos_type seekoff(off_type, ios_base::seekdir, ios_base::openmode)
+    static ESTD_CPP_CONSTEVAL pos_type seekoff(off_type, ios_base::seekdir, ios_base::openmode)
     {
         return pos_type(off_type(-1));
     };

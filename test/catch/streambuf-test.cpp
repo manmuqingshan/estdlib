@@ -226,7 +226,7 @@ TEST_CASE("streambuf")
     }
     SECTION("stringbuf")
     {
-        SECTION("layer1")
+        SECTION("layer1 null terminated")
         {
             layer1::stringbuf<32> sb1;
 
@@ -236,7 +236,21 @@ TEST_CASE("streambuf")
             {
                 const char* v = sb1.gptr();
 
-                REQUIRE(estd::layer2::const_string(v) == "hi2u");
+                REQUIRE(layer2::const_string(v) == "hi2u");
+            }
+            SECTION("seekpos")
+            {
+                long pos = sb1.pubseekpos(1, ios_base::in);
+
+                REQUIRE(pos == 1);
+                REQUIRE(layer2::const_string(sb1.gptr()) == "i2u");
+            }
+            SECTION("seekoff")
+            {
+                long pos = sb1.pubseekoff(1, ios_base::cur, ios_base::in);
+
+                REQUIRE(pos == 1);
+                REQUIRE(layer2::const_string(sb1.gptr()) == "i2u");
             }
         }
         SECTION("layer2")

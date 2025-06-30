@@ -156,12 +156,12 @@ public:
         return helper_type::sbumpc_evaporated(this);
     }
 
-    int_type sgetc()
+    ESTD_CPP_CONSTEXPR(14) int_type sgetc()
     {
         return base_type::xin_avail() == 0 ? underflow() : xsgetc();
     }
 
-    ESTD_CPP_CONSTEXPR_RET int_type sgetc() const
+    constexpr int_type sgetc() const
     {
         return base_type::xin_avail() == 0 ? underflow() : xsgetc();
     }
