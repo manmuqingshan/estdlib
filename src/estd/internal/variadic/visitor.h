@@ -167,7 +167,8 @@ struct visitor_value :
     integral_constant<T, v>
 {
     // Needed to soften 'explicit' in_place_index_t
-    constexpr visitor_value() = default;
+    constexpr visitor_value() : in_place_index_t<I>{}
+    {}
 };
 
 template <size_t I, class T>
@@ -176,8 +177,10 @@ struct visitor_index :
     in_place_type_t<T>,
     type_identity<T>
 {
-    // Needed to soften 'explicit' in_place_type_t
-    constexpr visitor_index() : in_place_type_t<T>()    {}
+    // Needed to soften 'explicit'
+    constexpr visitor_index() :
+        in_place_index_t<I>{},
+        in_place_type_t<T>{}    {}
 };
 
 template <size_t I, class T>
@@ -247,7 +250,7 @@ struct value_visitor
     using get = internal::get_index_finder<I, T, Values...>;
 
     template <size_t I>
-    using value = v1::visitor_value<I, T, get<I>::value>;
+    using value = v2::value<I, T, get<I>::value>;
 
     template <size_t I,
         class enabled = enable_if_t<(I == sizeof...(Values))>,
