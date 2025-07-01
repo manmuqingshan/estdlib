@@ -1,3 +1,20 @@
+# v0.8.8 - XXXXX25
+
+## Added Features
+
+* https://github.com/malachi-iot/estdlib/issues/120 `string_view` now has `empty()` method
+* https://github.com/malachi-iot/estdlib/issues/122 `estd::numeric` namespace added with `e`, `pi`, `phi`
+* https://github.com/malachi-iot/estdlib/issues/125 `estd::visit` now available for use with `variant`
+
+## Quality Updates & Bug Fixes
+
+* https://github.com/malachi-iot/estdlib/issues/124 streambuf fixes including better const friendliness and seekpos/seekoff scrubbing
+
+## Known Issues and Limitations
+
+* `estd::numeric` namespace lacks many constants
+* `estd::visit` multi-variant visitation order and return type is UB
+
 # v0.8.7 - 03JUN25
 
 ## Added Features
