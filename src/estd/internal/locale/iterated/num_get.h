@@ -22,6 +22,7 @@
 #include "../../ios_base.h"
 #include "../../chooser.h"
 #include "../../feature/num_get.h"
+#include "../../../cmath.h"
 
 #include "../../macro/push.h"
 
@@ -168,24 +169,24 @@ struct num_get
 
     // floating point variety
     template <typename T>
-    void finalize(T& v, false_type)
+    void finalize(T& v, false_type) const
     {
         if(state_.decimal_place_ != 0)
         {
-            T divider = 1;
-
-            // DEBT: Optimize ala
-            // https://stackoverflow.com/questions/18581560/any-way-faster-than-pow-to-compute-an-integer-power-of-10-in-c
-
-            for(int i = state_.decimal_place_; --i;)
-                divider *= base;
+#if FEATURE_STD_CMATH_NOTREADY
+            // Works, just somehow slightly less precise.  Disabled until that is resolved
+            const T mult = std::pow(base, -(state_.decimal_place_ - 1));
+            v *= mult;
+#else
+            const T divider = estd::pow(base, state_.decimal_place_ - 1);
 
             v /= divider;
+#endif
         }
     }
 
     template <class T>
-    constexpr bool finalize(T& v)
+    constexpr bool finalize(T& v) const
     {
         return finalize(v, bool_constant<numeric_limits<T>::is_integer>{}), false;
     }
