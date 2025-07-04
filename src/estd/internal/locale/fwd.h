@@ -43,7 +43,7 @@ struct cbase_utf;
 template <typename Char, unsigned b, class Locale, typename Enabled = void>
 struct cbase;
 
-template <class Char, class Locale, typename TEnabled = void>
+template <class Char, class Locale, typename Enabled = void>
 class ctype;
 
 template <internal::locale_code::values locale_code, internal::encodings::values encoding>

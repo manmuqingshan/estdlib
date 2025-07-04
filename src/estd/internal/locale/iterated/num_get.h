@@ -27,13 +27,15 @@
 
 namespace estd { namespace iterated {
 
+// DEBT: Consider a default Locale.
 template <unsigned base, typename Char, class Locale>
 struct num_get
 {
-    typedef Locale locale_type;
-    typedef Char char_type;
-    typedef cbase<char_type, base, locale_type> cbase_type;
-    typedef ctype<estd::remove_const_t<char_type>, locale_type> ctype_type;
+    using locale_type = Locale;
+    using char_type = Char;
+    using cbase_type = cbase<char_type, base, locale_type>;
+    using ctype_type = ctype<estd::remove_const_t<char_type>, locale_type>;
+
     typedef typename cbase_type::optional_type optional_type;
     typedef typename cbase_type::int_type int_type;
     typedef numpunct<estd::remove_const_t<char_type>, locale_type> numpunct_type;
@@ -159,7 +161,7 @@ struct num_get
 
     // integer variety (noop)
     template <typename T>
-    static ESTD_CPP_CONSTEXPR_RET bool finalize(T& v, true_type)
+    static constexpr bool finalize(T&, true_type)
     {
         return {};
     }
@@ -180,6 +182,12 @@ struct num_get
 
             v /= divider;
         }
+    }
+
+    template <class T>
+    constexpr bool finalize(T& v)
+    {
+        return finalize(v, bool_constant<numeric_limits<T>::is_integer>{}), false;
     }
 
     // NOTE: This method never sets eof bit
@@ -260,8 +268,9 @@ struct num_get
     }
 
 
-    template <class TIter, class T>
-    bool get(TIter& i, TIter end,
+    // Does NOT loop
+    template <class Iter, class T>
+    bool get(Iter& i, Iter end,
         ios_base::iostate& err, T& v)
     {
         if(i != end) return get(*i++, err, v);

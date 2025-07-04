@@ -340,6 +340,25 @@ TEST_CASE("locale")
 
                 REQUIRE(v == true);
             }
+            SECTION("float")
+            {
+                float v2 = 0;
+                const char* in = "-123.45";
+                const char* end = in + strlen(in);
+                bool done;
+
+                iterated::num_get<10, char, locale::classic_type> n;
+
+                do
+                {
+                    done = n.get(in, end, state, v2);
+                }
+                while(!done);
+
+                n.finalize(v2);
+
+                REQUIRE_THAT(v2, Catch::Matchers::WithinAbs(-123.45, 0.0001));
+            }
         }
         SECTION("non standard")
         {
