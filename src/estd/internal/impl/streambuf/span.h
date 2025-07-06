@@ -17,7 +17,8 @@ struct out_span_streambuf :
             typename Base::value_type::size_type >,
         Base
 {
-    typedef Base base_type;
+    using base_type = Base;
+
     typedef T char_type;
     typedef typename base_type::value_type span_type;
     typedef typename span_type::size_type size_type;
@@ -40,22 +41,22 @@ struct out_span_streambuf :
     // NOTE: Would use Extent here but that breaks it for scenarios
     // where Extent == -1
     template <std::size_t N>
-    out_span_streambuf(char_type (&array)[N]) :
+    explicit out_span_streambuf(char_type (&array)[N]) :
             base_type(array)
     {
 
     }
 
-#ifdef FEATURE_CPP_MOVESEMANTIC
-    out_span_streambuf(span_type&& move_from) :
+#if __cpp_rvalue_reference
+    constexpr explicit out_span_streambuf(span_type&& move_from) :
         base_type(std::move(move_from))
     {
 
     }
 #endif
 
-    out_span_streambuf(const span_type& copy_from) :
-            base_type(copy_from)
+    constexpr explicit out_span_streambuf(const span_type& copy_from) :
+        base_type(copy_from)
     {
 
     }

@@ -117,13 +117,19 @@ namespace detail {
 template <class Char, class CharTraits = estd::char_traits<Char>>
 using basic_ispanbuf = estd::internal::streambuf<estd::internal::impl::in_span_streambuf<Char, CharTraits> >;
 
+// DEPRECATED
 using ispanbuf = basic_ispanbuf<char>;
 
 template <class Char, class CharTraits = estd::char_traits<Char>>
 using basic_ispanstream = estd::detail::basic_istream<basic_ispanbuf<Char>>;
 
+// DEPRECATED
 using ispanstream = basic_ispanstream<char>;
 }
+
+
+using ispanbuf = detail::basic_ispanbuf<char>;
+using ispanstream = detail::basic_ispanstream<char>;
 
 // Working out best way for consumers to really configure their istreams
 namespace experimental {

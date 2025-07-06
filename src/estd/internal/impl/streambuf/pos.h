@@ -29,7 +29,8 @@ protected:
     constexpr explicit pos_streambuf_base(index_type&& pos) : pos_(std::move(pos)) {}
     constexpr explicit pos_streambuf_base(const index_type& pos) : pos_(pos) {}
 
-    ESTD_CPP_CONSTEXPR(14) const index_type& seekpos(const pos_type& p)
+    ESTD_CPP_CONSTEXPR(14) const index_type& seekpos(const pos_type& p,
+        ios_base::openmode = {})
     {
         return pos_ = p;
     }
@@ -39,7 +40,7 @@ protected:
     // creating the dual-mode version.  We like this single-mode version since in embedded
     // scenarios it's nice to have a dedicated in/out positional streambuf
     inline pos_type seekoff(off_type off, ios_base::seekdir way,
-                            ios_base::openmode = ios_base::in | ios_base::out)
+        ios_base::openmode = ios_base::in | ios_base::out)
     {
         switch(way)
         {
