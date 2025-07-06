@@ -10,7 +10,7 @@ namespace estd { namespace internal { namespace impl {
 // just the fundamental pieces, overflow/sync device handling will have to
 // be implemented in a derived class
 // TODO: Do char_traits the same between this and in_span_streambuf
-template <class T, estd::size_t Extent = detail::dynamic_extent::value,
+template <class T, size_t Extent = detail::dynamic_extent::value,
         class Base = estd::experimental::instance_provider<estd::span<T, Extent> > >
 struct out_span_streambuf :
         out_pos_streambuf_base<char_traits<T>,

@@ -205,14 +205,20 @@ namespace detail {
 template <class Char>
 using basic_ospanbuf = estd::detail::streambuf<estd::internal::impl::out_span_streambuf<Char> >;
 
+// DEPRECATED
 using ospanbuf = basic_ospanbuf<char>;
 
 template <class Char>
 using basic_ospanstream = estd::detail::basic_ostream<basic_ospanbuf<Char>>;
 
+// DEPRECATED
 using ospanstream = basic_ospanstream<char>;
 
 }
+
+using ospanbuf = detail::basic_ospanbuf<char>;
+using ospanstream = detail::basic_ospanstream<char>;
+
 
 }
 

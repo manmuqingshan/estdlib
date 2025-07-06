@@ -71,12 +71,10 @@ TEST_CASE("streambuf")
 
         val[0] = 0;
 
-        typedef estd::internal::impl::out_span_streambuf<uint8_t> streambuf_impl_type;
+        using streambuf_type = detail::basic_ospanbuf<uint8_t>;
 
         SECTION("initialization")
         {
-            typedef estd::internal::streambuf<streambuf_impl_type> streambuf_type;
-
             SECTION("array init")
             {
                 uint8_t buffer[32];
@@ -99,7 +97,7 @@ TEST_CASE("streambuf")
             // want that to be a supported technique
             // NOTE: This and many other of the '32' used around here are wrong, since
             // that's the uint32_t-oriented size
-            estd::internal::streambuf<decltype(test)> sb((uint8_t*)&val[0], 32);
+            detail::streambuf<decltype(test)> sb((uint8_t*)&val[0], 32);
 
             sb.sputc(0);
             sb.sputc(1);
@@ -119,7 +117,7 @@ TEST_CASE("streambuf")
         }
         SECTION("non-constexpr size version")
         {
-            estd::internal::streambuf<streambuf_impl_type> sb((uint8_t*)&val[0], 32);
+            streambuf_type sb((uint8_t*)&val[0], 32);
 
             sb.sputc(0);
             sb.sputc(1);
@@ -146,11 +144,8 @@ TEST_CASE("streambuf")
         }
         SECTION("ostream usage (complex initialization)")
         {
-            typedef estd::internal::impl::out_span_streambuf<uint32_t> sb_impl_type;
-            typedef estd::internal::streambuf<sb_impl_type> sb_type;
-
             // Successfully cascades down 'val, 32' all the way down to out_span_streambuf
-            estd::detail::basic_ostream<sb_type> out(val, 32);
+            detail::basic_ospanstream<uint32_t> out(val, 32);
 
             REQUIRE(out.rdbuf()->value().size() == 32);
         }
@@ -158,7 +153,7 @@ TEST_CASE("streambuf")
         {
             SECTION("setbuf")
             {
-                streambuf_impl_type sb((uint8_t*)&val[0], val_size);
+                streambuf_type sb((uint8_t*)&val[0], val_size);
 
                 uint8_t* data = sb.pptr();
 
