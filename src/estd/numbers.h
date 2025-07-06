@@ -22,13 +22,22 @@ constexpr T pi_v = T(3.1415926535897932385L);
 template <class T>
 constexpr T sqrt2_v = T(1.4142135623730950488L);
 
+#if __cplusplus >= 201703L
 inline constexpr auto e = e_v<double>;
 inline constexpr auto phi = phi_v<double>;
 inline constexpr auto pi = pi_v<double>;
 inline constexpr auto sqrt2 = sqrt2_v<double>;
+#else
+static constexpr auto e = e_v<double>;
+static constexpr auto phi = phi_v<double>;
+static constexpr auto pi = pi_v<double>;
+static constexpr auto sqrt2 = sqrt2_v<double>;
+#endif
 
 // EXPERIMENTAL
+#ifndef __estd_lib_math_constants
 #define __estd_lib_math_constants   201304L
+#endif
 
 #endif
 

@@ -127,14 +127,14 @@ class ctype : public internal::ctype<Char, Locale> {};
 
 namespace internal {
 
-template <class TChar, class TLocale>
-struct use_facet_helper<estd::ctype<TChar, void>, TLocale>
+template <class Char, class Locale>
+struct use_facet_helper<estd::ctype<Char, void>, Locale>
 {
-    typedef estd::ctype<TChar, TLocale> facet_type;
+    using facet_type = estd::ctype<Char, Locale>;
     
-    inline static facet_type use_facet(TLocale)
+    constexpr static facet_type use_facet(Locale)
     {
-        return facet_type();
+        return facet_type{};
     }
 };
 

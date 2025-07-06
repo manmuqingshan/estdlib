@@ -9,10 +9,10 @@ struct use_facet_helper;
 
 }
 
-template <class TFacet, class TLocale>
-typename internal::use_facet_helper<TFacet, TLocale>::facet_type use_facet(TLocale l)
+template <class Facet, class Locale>
+constexpr typename internal::use_facet_helper<Facet, Locale>::facet_type use_facet(Locale l)
 {
-    return internal::use_facet_helper<TFacet, TLocale>::use_facet(l);
+    return internal::use_facet_helper<Facet, Locale>::use_facet(l);
 }
 
 

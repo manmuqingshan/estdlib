@@ -62,10 +62,10 @@ struct locale : internal::locale_base_base
     inline static classic_type classic() { return classic_type(); }
 };
 
-template <class TChar, class TLocale>
-inline bool isspace(TChar ch, const TLocale& loc)
+template <class Char, class Locale>
+constexpr bool isspace(Char ch, const Locale& loc)
 {
-    return use_facet<ctype<TChar> >(loc).is(ctype_base::space, ch);
+    return use_facet<ctype<Char> >(loc).is(ctype_base::space, ch);
 }
 
 }
