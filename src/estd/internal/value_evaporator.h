@@ -217,7 +217,7 @@ struct instance_provider
     T _value;
 
     T& value() { return _value; }
-    const T& value() const { return _value; }
+    constexpr const T& value() const { return _value; }
 
     void value(const T& v) { _value = v; }
 
@@ -225,23 +225,10 @@ struct instance_provider
     void value(T&& v) { _value = std::move(v); }
 #endif
 
-//protected:
-    instance_provider(const T& v) : _value(v) {}
-
-#ifdef FEATURE_CPP_MOVESEMANTIC
-    instance_provider(T&& v) : _value(std::move(v)) {}
-#endif
-
-#ifdef FEATURE_CPP_VARIADIC
-    // basically an emplace type operation
-    template <class ...TArgs>
-    instance_provider(TArgs&&...args) :
-        _value(std::forward<TArgs>(args)...)
+    template <class ...Args>
+    explicit constexpr instance_provider(Args&&...args) :
+        _value(std::forward<Args>(args)...)
     {}
-#else
-    // Handles only simplistic "undefined" initialization
-    instance_provider() {}
-#endif
 };
 
 

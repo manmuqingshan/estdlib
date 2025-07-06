@@ -29,41 +29,20 @@ struct out_span_streambuf :
     typedef typename traits_type::int_type int_type;
 
     span_type& out() { return base_type::value(); }
-    const span_type& out() const { return base_type::value(); }
-
-    /*
-    out_span_streambuf(T* buf, size_type size) :
-            base_type(span_type(buf, size))
-    {
-
-    } */
+    constexpr const span_type& out() const { return base_type::value(); }
 
     // NOTE: Would use Extent here but that breaks it for scenarios
     // where Extent == -1
     template <std::size_t N>
     explicit out_span_streambuf(char_type (&array)[N]) :
-            base_type(array)
+        base_type(array)
     {
 
     }
 
-#if __cpp_rvalue_reference
-    constexpr explicit out_span_streambuf(span_type&& move_from) :
-        base_type(std::move(move_from))
-    {
-
-    }
-#endif
-
-    constexpr explicit out_span_streambuf(const span_type& copy_from) :
-        base_type(copy_from)
-    {
-
-    }
-
-
-    out_span_streambuf(char_type* data, const pos_type& count) :
-            base_type(data, count)
+    template <class ...Args>
+    constexpr explicit out_span_streambuf(Args&&...args) :
+        base_type(std::forward<Args>(args)...)
     {
 
     }
@@ -135,49 +114,49 @@ public:
 // just the fundamental pieces, overflow/sync device handling will have to
 // be implemented in a derived class
 // DEBT: Refactor this to take CharTraits directly
-template <class TChar,
-        class TCharTraits =  estd::char_traits<TChar>,
+template <class CharTraits,
         std::size_t Extent = detail::dynamic_extent::value,
-        class TBase = estd::experimental::instance_provider<estd::span<TChar, Extent> > >
+        class Base = estd::experimental::instance_provider<estd::span<typename CharTraits::char_type, Extent> > >
 struct in_span_streambuf :
-        in_pos_streambuf_base<TCharTraits>,
+        in_pos_streambuf_base<CharTraits>,
 
         streambuf_gptr_tag,
 
-        TBase
+        Base
 {
-    typedef in_pos_streambuf_base<TCharTraits> base_pos_type;
-    typedef TBase base_type;
+    using base_type = Base;
+    typedef in_pos_streambuf_base<CharTraits> base_pos_type;
 
     using typename base_pos_type::traits_type;
+    using char_type = typename traits_type::char_type;
     typedef typename base_type::value_type span_type;
     typedef typename span_type::size_type size_type;
     typedef typename traits_type::int_type int_type;
     typedef typename base_pos_type::pos_type pos_type;
-    typedef TChar char_type;
     typedef typename remove_const<char_type>::type nonconst_char_type;
 
 protected:
-    const span_type& in() const { return base_type::value(); }
+    constexpr const span_type& in() const { return base_type::value(); }
 
-    ESTD_CPP_CONSTEXPR_RET const pos_type& pos() const
+    constexpr const pos_type& pos() const
     {
         return base_pos_type::pos();
     }
 
 public:
-    in_span_streambuf(const estd::span<TChar, Extent>& copy_from)
-        : base_type(copy_from)
+    template <class ...Args>
+    constexpr explicit in_span_streambuf(Args&&...args)
+        : base_type(std::forward<Args>(args)...)
     {
 
     }
 
-    ESTD_CPP_CONSTEXPR_RET char_type* eback() const { return in().data(); }
-    ESTD_CPP_CONSTEXPR_RET char_type* gptr() const { return eback() + pos(); }
-    ESTD_CPP_CONSTEXPR_RET char_type* egptr() const { return eback() + in().size(); }
+    constexpr char_type* eback() const { return in().data(); }
+    constexpr char_type* gptr() const { return eback() + pos(); }
+    constexpr char_type* egptr() const { return eback() + in().size(); }
 
 protected:
-    ESTD_CPP_CONSTEXPR_RET streamsize xin_avail() const
+    constexpr streamsize xin_avail() const
     {
         return in().size() - pos();
     }

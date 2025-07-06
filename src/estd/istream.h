@@ -115,7 +115,7 @@ inline detail::basic_istream<TStreambuf, TBase>& ws(
 namespace detail {
 
 template <class Char, class CharTraits = estd::char_traits<Char>>
-using basic_ispanbuf = estd::internal::streambuf<estd::internal::impl::in_span_streambuf<Char, CharTraits> >;
+using basic_ispanbuf = estd::internal::streambuf<estd::internal::impl::in_span_streambuf<CharTraits> >;
 
 // DEPRECATED
 using ispanbuf = basic_ispanbuf<char>;
