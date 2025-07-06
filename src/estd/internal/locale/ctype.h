@@ -3,6 +3,7 @@
  * References:
  *
  * 1. cplusplus.com/reference/locale/ctype
+ * 2. https://en.cppreference.com/w/cpp/locale/ctype_char/is.html
  *
  */
 #pragma once
@@ -18,21 +19,41 @@ namespace estd {
 
 struct ctype_base
 {
-    typedef uint8_t mask;
+    using mask = uint8_t;
 
-    static CONSTEXPR mask space = 0x01;
-    static CONSTEXPR mask digit = 0x02;
-    static CONSTEXPR mask alpha = 0x04;
-    static CONSTEXPR mask punct = 0x08;
-    static CONSTEXPR mask upper = 0x10;
-    static CONSTEXPR mask lower = 0x20;
-    static CONSTEXPR mask xdigit = 0x40;
+    static constexpr mask space = 0x01;
+    static constexpr mask digit = 0x02;
+    static constexpr mask alpha = 0x04;
+    static constexpr mask punct = 0x08;
+    static constexpr mask upper = 0x10;
+    static constexpr mask lower = 0x20;
+    static constexpr mask xdigit = 0x40;
 
-    static CONSTEXPR mask alnum = alpha | digit;
-    static CONSTEXPR mask graph = alnum | punct;
+    // Not yet used - see https://en.cppreference.com/w/cpp/string/byte/isblank.html
+    static constexpr mask blank = 0x80;
+
+    static constexpr mask alnum = alpha | digit;
+    static constexpr mask graph = alnum | punct;
 };
 
 namespace internal {
+
+template <class Char>
+class ascii_ctype_base : public ctype_base
+{
+public:
+    using char_type = Char;
+
+    // These discrete helpers are not part of std
+    static constexpr bool isspace(char_type ch) { return internal::ascii_isspace(ch); }
+
+    static constexpr bool isupper(char_type ch) { return internal::ascii_isupper(ch); }
+
+    static constexpr bool islower(char_type ch)
+    {
+        return 'a' <= ch && ch <= 'a';
+    }
+};
 
 // specialization, deviating from standard in that locale is compile-time
 // instead of runtime
@@ -42,35 +63,25 @@ namespace internal {
 // strongly implies a layer1 behavior
 template <class Locale>
 class ctype<char, Locale,
-    typename enable_if<
-        internal::is_compatible_with_classic_locale<Locale>::value>::type> :
-    public ctype_base
+    enable_if_t<internal::is_compatible_with_classic_locale<Locale>::value>> :
+    public ascii_ctype_base<char>
 {
-    typedef Locale locale_type;
+    using base_type = ascii_ctype_base<char>;
+    using locale_type = Locale;
 
 public:
-    // These discrete helpers are not part of std
-    static constexpr bool isspace(char ch) { return internal::ascii_isspace(ch); }
-
-    static constexpr bool isupper(char ch) { return internal::ascii_isupper(ch); }
-
-    static constexpr bool islower(char ch)
-    {
-        return 'a' <= ch && ch <= 'a';
-    }
-
-    typedef char char_type;
-
     //static locale::id id;
 
     static constexpr char widen(char c) { return c; }
 
     // "returns whether c belongs to any of the categories specified in bitmask m" [1]
+    // 06JUL25 MB DEBT: Serves me right for using cplusplus.com, probably it's a bit more mutually
+    // exclusive (not sure) as per [2]
     static ESTD_CPP_CONSTEXPR(14) bool is(mask m, char ch)
     {
         if(m & space)
         {
-            if(isspace(ch)) return true;
+            if(base_type::isspace(ch)) return true;
         }
         if(m & xdigit)
         {
@@ -84,11 +95,11 @@ public:
         }
         if(m & upper)
         {
-            if(isupper(ch)) return true;
+            if(base_type::isupper(ch)) return true;
         }
         else if(m & lower)
         {
-            if(islower(ch)) return true;
+            if(base_type::islower(ch)) return true;
         }
         return false;
     }

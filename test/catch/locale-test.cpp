@@ -137,15 +137,13 @@ TEST_CASE("locale")
     {
         SECTION("global")
         {
-            const bool r = estd::isspace(' ');
-
-            REQUIRE(r);
+            REQUIRE(estd::isspace(' '));
+            REQUIRE(estd::isspace('\n'));
         }
         SECTION("localized")
         {
-            const bool r = isspace(' ', l);
-
-            REQUIRE(r);
+            REQUIRE(isspace(' ', l));
+            REQUIRE(isspace('\n', l));
         }
     }
     SECTION("num_get")

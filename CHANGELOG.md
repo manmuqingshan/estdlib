@@ -9,9 +9,10 @@
 ## Quality Updates & Bug Fixes
 
 * https://github.com/malachi-iot/estdlib/issues/124 streambuf fixes including better const friendliness and seekpos/seekoff scrubbing
-* https://github.com/malachi-iot/estdlib/issues/131
-    *`spanbuf` now forwards initialization to underlying `span`.  `seekoff` passes tests
+* https://github.com/malachi-iot/estdlib/issues/131 `spanbuf` improvements:
+    * Now forwards initialization to underlying `span`.  `seekoff` passes tests
     * `ispanstream` and `ospanstream` now sit at `estd` namespace level
+* https://github.com/malachi-iot/estdlib/issues/132 `isspace` now registers linefeeds, etc.
 
 ## Known Issues and Limitations
 

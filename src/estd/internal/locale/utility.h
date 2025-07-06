@@ -26,7 +26,7 @@ struct is_compatible_encoding<internal::encodings::ASCII, internal::encodings::A
     typedef T type;
 };
 
-// locale codes are sometimes freely interchangeable.  For example, numpunct true/flase is identical
+// locale codes are sometimes freely interchangeable.  For example, numpunct true/false is identical
 // for en_US and en_GB and all other english variants.  For those scenarios, use this helper
 template<locale_code::values core, locale_code::values presented,
     class T = void>
@@ -55,15 +55,14 @@ struct is_compatible_locale_code<locale_code::en_US, locale_code::C, T> :
     typedef T type;
 };
 
-template<class TLocale, class T = void>
+template<class Locale, class T = void>
 struct is_compatible_with_classic_locale : estd::false_type {};
 
 template <locale_code::values lc, internal::encodings::values encoding>
 struct is_compatible_with_classic_locale<locale<lc, encoding>,
-    typename estd::enable_if<
+    estd::enable_if_t<
         is_compatible_encoding<internal::encodings::ASCII, encoding>::value &&
-        is_compatible_locale_code<locale_code::en_US, lc>::value>
-        ::type> :
+        is_compatible_locale_code<locale_code::en_US, lc>::value>> :
     estd::true_type
 {
     //typedef bool type;
