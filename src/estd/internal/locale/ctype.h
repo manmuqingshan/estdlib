@@ -49,29 +49,12 @@ class ctype<char, Locale,
     typedef Locale locale_type;
 
 public:
-    static bool isspace(char ch)
-    {
-        // as per http://en.cppreference.com/w/cpp/string/byte/isspace
-        switch(ch)
-        {
-            case ' ':
-            case 13:
-            case 10:
-            case '\f':
-            case '\t':
-            case '\v':
-                return true;
-        }
+    // These discrete helpers are not part of std
+    static constexpr bool isspace(char ch) { return internal::ascii_isspace(ch); }
 
-        return false;
-    }
+    static constexpr bool isupper(char ch) { return internal::ascii_isupper(ch); }
 
-    static bool isupper(char ch)
-    {
-        return 'A' <= ch && ch <= 'Z';
-    }
-
-    static bool islower(char ch)
+    static constexpr bool islower(char ch)
     {
         return 'a' <= ch && ch <= 'a';
     }
@@ -80,10 +63,10 @@ public:
 
     //static locale::id id;
 
-    static ESTD_CPP_CONSTEXPR_RET char widen(char c) { return c; }
+    static constexpr char widen(char c) { return c; }
 
     // "returns whether c belongs to any of the categories specified in bitmask m" [1]
-    static bool is(mask m, char ch)
+    static ESTD_CPP_CONSTEXPR(14) bool is(mask m, char ch)
     {
         if(m & space)
         {

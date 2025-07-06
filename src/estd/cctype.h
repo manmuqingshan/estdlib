@@ -6,9 +6,9 @@
 // DEBT: Revamp all these to use locale's ctype
 namespace estd {
 
-inline int isupper(int ch)
+constexpr int isupper(int ch)
 {
-    return 'A' <= ch && ch <= 'Z';
+    return internal::ascii_isupper(ch);
 }
 
 inline int islower(int ch)
@@ -21,12 +21,12 @@ inline int isalpha(int ch)
     return isupper(ch) || islower(ch);
 }
 
-inline int isspace(int ch)
+inline ESTD_CPP_CONSTEXPR(14) int isspace(int ch)
 {
     return internal::ascii_isspace(ch);
 }
 
-inline int isdigit(int ch)
+inline constexpr int isdigit(int ch)
 {
     return internal::ascii_isdigit(ch);
 }
