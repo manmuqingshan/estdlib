@@ -91,7 +91,7 @@ TEST_CASE("streambuf")
         {
             // 'test' actually sits dormant and does nothing.  artifact of previous test
             // approach
-            estd::internal::impl::out_span_streambuf<uint8_t> test((uint8_t*)&val[0], 32);
+            estd::internal::impl::out_span_streambuf<estd::char_traits<uint8_t>> test((uint8_t*)&val[0], 32);
 
             // NOTE: Wanted to do a ref version here but not sure if I actually
             // want that to be a supported technique
