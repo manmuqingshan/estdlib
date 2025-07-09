@@ -114,19 +114,27 @@ inline detail::basic_istream<TStreambuf, TBase>& ws(
 // live in estd itself rather than estd::detail
 namespace detail {
 
-template <class Char, class CharTraits = estd::char_traits<Char>>
-using basic_ispanbuf = estd::internal::streambuf<estd::internal::impl::in_span_streambuf<CharTraits> >;
+template <class Char, class CharTraits = estd::char_traits<Char>, size_t Extent = detail::dynamic_extent::value>
+using basic_ispanbuf = estd::internal::streambuf<estd::internal::impl::in_span_streambuf<CharTraits, Extent>>;
 
 // DEPRECATED
 using ispanbuf = basic_ispanbuf<char>;
 
-template <class Char, class CharTraits = estd::char_traits<Char>>
-using basic_ispanstream = estd::detail::basic_istream<basic_ispanbuf<Char>>;
+template <class Char, class CharTraits = estd::char_traits<Char>, size_t Extent = detail::dynamic_extent::value>
+using basic_ispanstream = estd::detail::basic_istream<basic_ispanbuf<Char, CharTraits, Extent>>;
 
 // DEPRECATED
 using ispanstream = basic_ispanstream<char>;
-}
 
+// EXPERIMENTAL
+// Seems unhappy since it's a perfect forward Args&& situation and can't directly match
+// 'span' as a parameter
+#if __cpp_deduction_guides
+template <class Char, size_t Extent>
+basic_istream(span<Char, Extent>) -> basic_ispanstream<Char, estd::char_traits<Char>, Extent>;
+#endif
+
+}
 
 using ispanbuf = detail::basic_ispanbuf<char>;
 using ispanstream = detail::basic_ispanstream<char>;

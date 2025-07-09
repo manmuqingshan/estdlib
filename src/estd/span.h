@@ -11,7 +11,7 @@ namespace estd {
 
 namespace detail {
 
-typedef estd::integral_constant<estd::size_t, (estd::size_t)-1> dynamic_extent;
+using dynamic_extent = integral_constant<estd::size_t, (estd::size_t)-1>;
 
 }
 
@@ -19,7 +19,7 @@ template <class T, estd::size_t Extent = detail::dynamic_extent::value>
 class span;
 
 #ifdef FEATURE_CPP_INLINE_VARIABLES
-inline CONSTEXPR ptrdiff_t dynamic_extent = detail::dynamic_extent::value;
+inline constexpr estd::size_t dynamic_extent = detail::dynamic_extent::value;
 #endif
 
 namespace internal {

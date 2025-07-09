@@ -312,37 +312,20 @@ public:
 
 
 #ifndef FEATURE_IOS_STREAMBUF_FULL
-    //typedef typename base_t::stream_type stream_t;
+    // DEBT: Do up constexpr and explicit here
 
-    //basic_istream(stream_t& stream) : base_t(stream) {}
-
-#ifdef FEATURE_CPP_MOVESEMANTIC
-    template <class ... TArgs>
-    basic_istream(TArgs&& ...args) :
-            base_type(std::forward<TArgs>(args)...)
+    template <class ... Args>
+    basic_istream(Args&& ...args) :
+        base_type(std::forward<Args>(args)...)
     {
         gcount(0);
     }
 
     basic_istream(streambuf_type&& streambuf) :
-            base_type(std::move(streambuf))
+        base_type(std::move(streambuf))
     {
         gcount(0);
     }
-#else
-    basic_istream()
-    {
-        gcount(0);
-    }
-
-    template<class T1>
-    basic_istream(T1& param1) :
-        base_type(param1)
-    {
-        gcount(0);
-    }
-
-#endif
 
     basic_istream(streambuf_type& streambuf) :
             base_type(streambuf)

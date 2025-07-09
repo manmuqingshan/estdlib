@@ -115,7 +115,7 @@ public:
 // be implemented in a derived class
 // DEBT: Refactor this to take CharTraits directly
 template <class CharTraits,
-        std::size_t Extent = detail::dynamic_extent::value,
+        size_t Extent = detail::dynamic_extent::value,
         class Base = estd::experimental::instance_provider<estd::span<typename CharTraits::char_type, Extent> > >
 struct in_span_streambuf :
         in_pos_streambuf_base<CharTraits>,
@@ -174,6 +174,15 @@ protected:
 
     ESTD_CPP_CONSTEXPR_RET const char_type& xsgetc() const { return *gptr(); }
 };
+
+// EXPERIMENTAL
+// Works-ish, but no use case identified
+#if __cpp_deduction_guides
+template <class CharTraits, size_t Extent>
+in_span_streambuf(estd::span<typename CharTraits::char_type, Extent>) ->
+    in_span_streambuf<CharTraits, Extent>;
+#endif
+
 
 
 }}}

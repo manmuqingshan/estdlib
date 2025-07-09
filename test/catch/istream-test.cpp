@@ -11,8 +11,7 @@ using namespace estd;
 
 TEST_CASE("istream")
 {
-    typedef internal::impl::basic_stringbuf<layer1::string<32> > impl_type;
-    using streambuf_type = detail::streambuf<impl_type>;
+    using streambuf_type = layer1::stringbuf<32>;
 
     SECTION("basics")
     {
@@ -80,8 +79,7 @@ TEST_CASE("istream")
         }
         SECTION("integer conversion from spanbuf")
         {
-            estd::span<const char> s("123 A");
-            estd::detail::basic_ispanstream<const char> in(s);
+            detail::basic_ispanstream<const char> in("123 A");
 
             unsigned v = 0;
 
@@ -220,6 +218,17 @@ TEST_CASE("istream")
             }
         }
     }
+#if __cpp_deduction_guides
+    SECTION("CTAD")
+    {
+        SECTION("ispanstream")
+        {
+            //span<const char, 4> s("hi2u");
+
+            //detail::basic_ispanstream in(s);
+        }
+    }
+#endif
     SECTION("cin")
     {
         // limited testing since an automated test shouldn't pause for input
