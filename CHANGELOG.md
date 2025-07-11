@@ -1,3 +1,13 @@
+# v0.8.9 - XXXXX25
+
+## Added Features
+
+* https://github.com/malachi-iot/estdlib/issues/133 TBD UNDERWAY
+
+## Quality Updates & Bug Fixes
+
+* `ESTD_FLAGS` now works better in non-constexpr situations
+
 # v0.8.8 - 09JUL25
 
 ## Added Features
