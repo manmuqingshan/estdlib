@@ -7,7 +7,7 @@
 namespace estd { namespace detail { inline namespace v1 {
 
 ///
-/// Designed really to be fully consteval friendly, but works as intended merely as contextp
+/// Designed really to be fully consteval friendly, but works as intended merely as constexpr
 ///
 template <class Enum>
 class flags
@@ -34,7 +34,7 @@ public:
 
     constexpr flags(const value_type& value) : value_{value}    {}
 
-    ESTD_CPP_CONSTEXPR(14) flags& operator|=(const flags& v)
+    ESTD_CPP_CONSTEXPR(14) flags& operator|=(flags v)
     {
         value_ |= v;
         return *this;
@@ -53,17 +53,17 @@ public:
         return flags(~int_type(value_));
     }
 
-    constexpr flags operator ^(const value_type& v) const
+    constexpr flags operator ^(value_type v) const
     {
         return flags{int_type(v) ^ int_type(value_)};
     }
 
-    constexpr flags operator |(const value_type& v) const
+    constexpr flags operator |(value_type v) const
     {
         return flags{int_type(v) | int_type(value_)};
     }
 
-    constexpr flags operator &(const value_type& v) const
+    constexpr flags operator &(value_type v) const
     {
         return flags{int_type(v) & int_type(value_)};
     }
@@ -95,12 +95,12 @@ constexpr bool operator!=(const flags<Enum>& lhs, const flags<Enum>& rhs)
 
 // Auto-promotes 'Enum' to flags<Enum> during these operations
 #define ESTD_FLAGS(Enum)    \
-constexpr estd::detail::v1::flags<Enum> operator~(const Enum& v)    \
+constexpr estd::detail::v1::flags<Enum> operator~(Enum v)    \
 { return ~estd::detail::v1::flags<Enum>(v); }     \
-    constexpr estd::detail::v1::flags<Enum> operator^(const Enum& lhs, const Enum& rhs)    \
+constexpr estd::detail::v1::flags<Enum> operator^(Enum lhs, Enum rhs)    \
 { return estd::detail::v1::flags<Enum>(lhs) ^ rhs; }     \
-    constexpr estd::detail::v1::flags<Enum> operator|(const Enum& lhs, const Enum& rhs)    \
+constexpr estd::detail::v1::flags<Enum> operator|(Enum lhs, Enum rhs)    \
 { return estd::detail::v1::flags<Enum>(lhs) | rhs; }     \
-    constexpr estd::detail::v1::flags<Enum> operator&(const Enum& lhs, const Enum& rhs)    \
+constexpr estd::detail::v1::flags<Enum> operator&(Enum lhs, Enum rhs)    \
 { return estd::detail::v1::flags<Enum>(lhs) & rhs; }
 

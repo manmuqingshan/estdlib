@@ -21,9 +21,20 @@ struct test1
 template <synthetic_flags f>
 struct test1<f, estd::enable_if_t<f & SN_DOUBLE>>
 {
+    static constexpr synthetic_flags flags = f;
     static constexpr bool is_const = f & SN_CONST;
     using value_type = double;
 };
+
+template <synthetic_flags f>
+void assert_double(test1<f>)
+{
+    // C++14 is sensitive to non-constexpr linking, so test that too
+    if(!(test1<f>::flags & SN_DOUBLE))
+    {
+        CATCH_ERROR("Shouldn't get here");
+    }
+}
 
 
 TEST_CASE("flags (compile-time capable)", "[flags]")
@@ -35,4 +46,6 @@ TEST_CASE("flags (compile-time capable)", "[flags]")
     static_assert(std::is_same<t1::value_type, int>::value, "");
     static_assert(std::is_same<t2::value_type, double>::value, "");
     static_assert(t3::is_const, "");
+
+    assert_double(t2{});
 }
