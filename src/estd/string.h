@@ -131,6 +131,8 @@ int stoi(
     return (int) stol(str, pos, base);
 }
 
+// TODO: Consider a strlen_c or similar using recursion.  That might accommodate a c++11
+// constexpr requirement
 template <class Char>
 ESTD_CPP_CONSTEXPR(14) size_t strlen(const Char* s)
 {
