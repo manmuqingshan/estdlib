@@ -125,7 +125,7 @@ TEST_CASE("string_view")
         constexpr string_view sv("test", 4);
 
         // https://github.com/malachi-iot/estdlib/issues/133
-        //constexpr string_view sv1("test");
+        constexpr string_view sv1("test");
         constexpr string_view sv2;
     }
     SECTION("insert")

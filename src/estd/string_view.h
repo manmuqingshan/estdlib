@@ -45,7 +45,11 @@ public:
 
     // C-style null terminated string
     constexpr basic_string_view(const_pointer s) :
+#if __cpp_constexpr >= 201703L
         base_type(init_param_t(s, traits_type::length(s)))
+#else
+        base_type(init_param_t(s, estd::strlen(s)))
+#endif
     {
 
     }

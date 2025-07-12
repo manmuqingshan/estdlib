@@ -131,6 +131,16 @@ int stoi(
     return (int) stol(str, pos, base);
 }
 
+template <class Char>
+ESTD_CPP_CONSTEXPR(14) size_t strlen(const Char* s)
+{
+    const Char* i = s;
+
+    while(*i != 0)  ++i;
+
+    return i - s;
+}
+
 
 }
 
