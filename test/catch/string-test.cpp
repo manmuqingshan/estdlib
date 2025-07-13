@@ -697,6 +697,16 @@ TEST_CASE("string tests")
             estd::layer2::string<> val2(buf);
             int value = estd::stoi(val2); */
         }
+        SECTION("stoi (hex)")
+        {
+            estd::layer2::const_string s = "0x100";
+            int value = estd::stoi(s, nullptr, 16);
+
+            // NOTE: It is implied that base can be auto-deduced with 0x etc
+            // https://en.cppreference.com/w/cpp/string/basic_string/stol
+            // However it seems that explicit base must still be specified
+            REQUIRE(value == 0x100);
+        }
     }
     SECTION("errc")
     {

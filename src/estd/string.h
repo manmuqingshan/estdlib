@@ -75,8 +75,8 @@ public:
 // to handle non-null terminated strings
 template <class Impl>
 long stol(
-        const detail::basic_string<Impl>& str,
-        size_t* pos = 0, int base = 10)
+    const detail::basic_string<Impl>& str,
+    size_t* pos = nullptr, int base = 10)
 {
     // FIX: very clunky way to ensure we're looking at a null terminated string
     // policy won't have this method otherwise
@@ -96,8 +96,8 @@ long stol(
 
 template <class Impl>
 unsigned long stoul(
-        const detail::basic_string<Impl>& str,
-        size_t* pos = 0, int base = 10
+    const detail::basic_string<Impl>& str,
+    size_t* pos = nullptr, int base = 10
         )
 {
     using string_type = detail::basic_string<Impl>;
@@ -126,7 +126,7 @@ unsigned long stoul(
 template <class Impl>
 int stoi(
         const detail::basic_string<Impl>& str,
-        size_t* pos = 0, int base = 10)
+        size_t* pos = nullptr, int base = 10)
 {
     return (int) stol(str, pos, base);
 }
