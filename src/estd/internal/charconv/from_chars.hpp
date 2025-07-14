@@ -8,6 +8,8 @@
 
 namespace estd { namespace internal {
 
+// DEBT: Document why we aren't taking advantage of constexpr base, look to comment
+// at top of charconv.h
 template<class Cbase, bool sto_mode = false, class T, class CharIt>
 detail::from_chars_result<CharIt> from_chars_integer(CharIt first, CharIt last,
     T& value,
@@ -35,29 +37,29 @@ detail::from_chars_result<CharIt> from_chars_integer(CharIt first, CharIt last,
 
     // "leading whitespace is not ignored" [1]
     // Only eat whitespace in sto mode
-    while (sto_mode && estd::internal::ascii_isspace(*current))
+    while(sto_mode && estd::internal::ascii_isspace(*current))
         ++current;
 
     // NOTE: A little odd, https://en.cppreference.com/w/cpp/string/byte/strtoul.html
     // indicates '-' is OK, but how could that be?
-    if (estd::is_signed<T>::value)
+    if(estd::is_signed<T>::value)
     {
         negate = *current == '-';
 
         if (negate) ++current;
     }
 
-    if (sto_mode && *current == '+')    ++current;
+    if(sto_mode && *current == '+')    ++current;
 
-    while (current != last)
+    while(current != last)
     {
         const optional_type digit = cbase_type::from_char(*current, base);
-        if (digit.has_value())
+        if(digit.has_value())
         {
             bool success = raise_and_add(local_value, base, digit.value());
 
             // If we didn't succeed, that means we overflowed
-            if (!success)
+            if(!success)
             {
                 // skip to either end or next spot which isn't a number
                 // "ptr points at the first character not matching the pattern." [1]
@@ -75,7 +77,15 @@ detail::from_chars_result<CharIt> from_chars_integer(CharIt first, CharIt last,
         {
             if(sto_mode)
             {
-                // TODO: Look for 0x, 0X
+                // Look for 0x, 0X
+                if(base == 16 && current == first + 1)
+                {
+                    if(local_value == 0 && (*current == 'x' || *current == 'X'))
+                    {
+                        ++current;
+                        continue;
+                    }
+                }
             }
 
             value = local_value;

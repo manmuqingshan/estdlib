@@ -124,6 +124,7 @@ TEST_CASE("charconv")
                 estd::from_chars_result r;
                 const char* src_pos = "+1234";
                 const char* src_ws = "  -1234";
+                const char* src_hex = "0xFF";
                 int svalue = 0;
                 unsigned uvalue = 0;
 
@@ -136,6 +137,12 @@ TEST_CASE("charconv")
                     r = from_chars_integer<10, false>(src_ws, src_ws + 7, svalue);
                     REQUIRE(r.ec == errc::invalid_argument);
                     REQUIRE(svalue == 0);
+
+                    // Bad hex still resolves the first '0' as a valid value
+                    r = from_chars_integer<16, false>(src_hex, src_hex + 4, svalue);
+                    REQUIRE(r.ec == 0);
+                    REQUIRE(r.ptr == src_hex + 1);
+                    REQUIRE(svalue == 0);
                 }
                 SECTION("on")
                 {
@@ -145,6 +152,8 @@ TEST_CASE("charconv")
                     REQUIRE(uvalue == 1234);
                     r = from_chars_integer<10, true>(src_ws, src_ws + 7, svalue);
                     REQUIRE(svalue == -1234);
+                    r = from_chars_integer<16, true>(src_hex, src_hex + 4, svalue);
+                    REQUIRE(svalue == 255);
                 }
             }
         }
