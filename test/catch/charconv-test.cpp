@@ -119,6 +119,34 @@ TEST_CASE("charconv")
 
                 REQUIRE(value == 0xAB);
             }
+            SECTION("sto mode")
+            {
+                estd::from_chars_result r;
+                const char* src_pos = "+1234";
+                const char* src_ws = "  -1234";
+                int svalue = 0;
+                unsigned uvalue = 0;
+
+                SECTION("off (default)")
+                {
+                    r = from_chars_integer<10, false>(src_pos, src_pos + 5, svalue);
+                    REQUIRE(r.ec == errc::invalid_argument);
+                    REQUIRE(svalue == 0);
+                    r = from_chars_integer<10, false>(src_pos, src_pos + 5, uvalue);
+                    r = from_chars_integer<10, false>(src_ws, src_ws + 7, svalue);
+                    REQUIRE(r.ec == errc::invalid_argument);
+                    REQUIRE(svalue == 0);
+                }
+                SECTION("on")
+                {
+                    r = from_chars_integer<10, true>(src_pos, src_pos + 5, svalue);
+                    REQUIRE(svalue == 1234);
+                    r = from_chars_integer<10, true>(src_pos, src_pos + 5, uvalue);
+                    REQUIRE(uvalue == 1234);
+                    r = from_chars_integer<10, true>(src_ws, src_ws + 7, svalue);
+                    REQUIRE(svalue == -1234);
+                }
+            }
         }
         SECTION("various types")
         {
@@ -155,6 +183,17 @@ TEST_CASE("charconv")
 
                 REQUIRE(result.ec == 0);
                 REQUIRE(value == 1234);
+            }
+        }
+        SECTION("sto")
+        {
+            SECTION("on")
+            {
+
+            }
+            SECTION("off (default)")
+            {
+
             }
         }
     }

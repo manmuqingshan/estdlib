@@ -17,7 +17,7 @@ struct from_chars_result
     estd::errc ec;
 
     constexpr from_chars_result(CharIt ptr, estd::errc ec) :
-        ptr(ptr), ec(ec) {}
+        ptr{ptr}, ec{ec} {}
 
     from_chars_result() = default;
 };

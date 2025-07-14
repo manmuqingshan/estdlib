@@ -17,13 +17,13 @@ namespace internal {
 // two - base10 and base36.  Reason is that cbase itself still takes a runtime parameter - so
 // the former deals with numeric, while the latter deals with alphanumeric
 
-template<unsigned b, class T, class CharIt>
+template<unsigned b, bool sto_mode = false, class T, class CharIt>
 inline estd::detail::from_chars_result<CharIt> from_chars_integer(CharIt first, CharIt last,
     T& value,
     const unsigned short base = b)
 {
     return internal::from_chars_integer<
-        cbase<char, b, internal::classic_locale_type> >(first, last, value, base);
+        cbase<char, b, internal::classic_locale_type>, sto_mode>(first, last, value, base);
 }
 
 template <unsigned b, class Int, class CharIt>

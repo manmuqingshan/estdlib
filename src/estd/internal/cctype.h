@@ -15,7 +15,7 @@ inline constexpr int ascii_isdigit(int ch)
 
 // As per http://en.cppreference.com/w/cpp/string/byte/isspace
 template <class Char>
-inline ESTD_CPP_CONSTEXPR(14) bool ascii_isspace(Char ch)
+ESTD_CPP_CONSTEXPR(14) bool ascii_isspace(Char ch)
 {
     switch(ch)
     {

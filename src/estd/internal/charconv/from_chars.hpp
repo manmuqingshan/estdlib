@@ -8,20 +8,18 @@
 
 namespace estd { namespace internal {
 
-template<class Cbase, class T, class CharIt>
+template<class Cbase, bool sto_mode = false, class T, class CharIt>
 detail::from_chars_result<CharIt> from_chars_integer(CharIt first, CharIt last,
     T& value,
     const unsigned short base = Cbase::base())
 {
-    typedef Cbase cbase_type;
-    typedef typename cbase_type::optional_type optional_type;
-    typedef detail::from_chars_result<CharIt> result_type;
+    using cbase_type = Cbase;
+    using optional_type =  typename cbase_type::optional_type;
+    using result_type = detail::from_chars_result<CharIt>;
 
-#ifdef __cpp_static_assert
     // DEBT: Expand this to allow any numeric type, we'll have to make specialized
     // versions of raise_and_add to account for that
     static_assert(estd::is_integral<T>::value, "T must be integral type");
-#endif
 
     CharIt current = first;
     bool negate;
@@ -35,11 +33,13 @@ detail::from_chars_result<CharIt> from_chars_integer(CharIt first, CharIt last,
     // "If the value of base is 0, the numeric base is auto-detected: if the prefix is 0, [...]
     //  otherwise the base is decimal" [2]
 
-    /*
-     * "leading whitespace is not ignored" [1]
-    while (estd::internal::ascii_isspace(*current))
-        current++; */
+    // "leading whitespace is not ignored" [1]
+    // Only eat whitespace in sto mode
+    while (sto_mode && estd::internal::ascii_isspace(*current))
+        ++current;
 
+    // NOTE: A little odd, https://en.cppreference.com/w/cpp/string/byte/strtoul.html
+    // indicates '-' is OK, but how could that be?
     if (estd::is_signed<T>::value)
     {
         negate = *current == '-';
@@ -47,9 +47,10 @@ detail::from_chars_result<CharIt> from_chars_integer(CharIt first, CharIt last,
         if (negate) ++current;
     }
 
+    if (sto_mode && *current == '+')    ++current;
+
     while (current != last)
     {
-        // DEBT: Use has_value() and friends for clarity here
         const optional_type digit = cbase_type::from_char(*current, base);
         if (digit.has_value())
         {
@@ -62,30 +63,23 @@ detail::from_chars_result<CharIt> from_chars_integer(CharIt first, CharIt last,
                 // "ptr points at the first character not matching the pattern." [1]
                 while (++current != last && cbase_type::is_in_base(*current)) {}
 
-#ifdef FEATURE_CPP_INITIALIZER_LIST
                 return result_type{current, estd::errc::result_out_of_range};
-#else
-                return result_type(current, estd::errc::result_out_of_range);
-#endif
             }
         }
+        // If first character isn't a digit, error out immediately
         else if(current == first)
         {
-            return result_type
-#ifdef FEATURE_CPP_INITIALIZER_LIST
-                {current, estd::errc::invalid_argument};
-#else
-            (current, estd::errc::invalid_argument);
-#endif
+            return result_type{current, estd::errc::invalid_argument};
         }
         else
         {
+            if(sto_mode)
+            {
+                // TODO: Look for 0x, 0X
+            }
+
             value = local_value;
-#ifdef FEATURE_CPP_INITIALIZER_LIST
             return result_type{current, estd::errc(0)};
-#else
-            return result_type(current, estd::errc(0));
-#endif
         }
         ++current;
     }
@@ -95,11 +89,7 @@ detail::from_chars_result<CharIt> from_chars_integer(CharIt first, CharIt last,
         local_value = -local_value;
 
     value = local_value;
-#ifdef FEATURE_CPP_INITIALIZER_LIST
     return result_type{last,estd::errc(0)};
-#else
-    return result_type(last,estd::errc(0));
-#endif
 }
 
 }}
