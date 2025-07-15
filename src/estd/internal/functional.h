@@ -230,6 +230,15 @@ public:
     // EXPERIMENTAL
     template <template <template <class> class, typename F, class ...TArgs2> class TProvided, class ...TArgs2>
     using imbue = TProvided<detail::impl::function_fnptr1, TResult(TArgs...), TArgs2...>;
+
+#if FEATURE_ESTD_GH135
+    // EXPERIMENTAL
+    void move_to(model_base* dest)
+    {
+        m->move_to(dest);
+        m = nullptr;
+    }
+#endif
 };
 
 }}
@@ -382,6 +391,7 @@ class function_view
     using model_base = typename function_type::model_base;
 
     function_type function_;
+    // FIX: Redundant with function_.getm()
     byte* data_;    // aka model_base*
     unsigned data_size_;
 
@@ -399,13 +409,6 @@ public:
     // DEBT: Instead do a forwarding operator() - just holding off since Return
     // treatment a bit non trivial
     function_type& function() { return function_; }
-
-#if FEATURE_ESTD_GH135
-    void move()
-    {
-
-    }
-#endif
 };
 
 }

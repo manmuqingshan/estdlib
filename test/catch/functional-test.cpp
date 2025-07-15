@@ -381,10 +381,15 @@ TEST_CASE("functional")
                     int counter = 0;
 
 #if FEATURE_ESTD_GH135
-                    void move(model_base* move_from) override
+                    void copy_to(model_base* dest) override
                     {
 
-                    };
+                    }
+
+                    void move_to(model_base* dest) override
+                    {
+
+                    }
 #endif
                 };
 
@@ -773,21 +778,39 @@ TEST_CASE("functional")
 #if FEATURE_ESTD_GH135
     SECTION("move")
     {
-        test::Dummy dummy;
+        test::Dummy dummy(0, "hello");
+        test::Dummy* dummy_ptr = &dummy;
 
         SECTION("virtual")
         {
             using fb = detail::v2::function<void(int), detail::impl::function_virtual>;
+            using model_base = typename fb::model_base;
             using fv = internal::function_view<void(int), detail::impl::function_virtual>;
 
             auto m1 = fb::make_model([=](int v)
             {
+                dummy_ptr->val1 += v;
             });
 
-            fv fv1(&m1, sizeof(m1));
+            fb fb1(&m1);
 
-            fv1.function()(5);
-            fv1.move();
+            fb1(5);
+
+            REQUIRE(dummy.val1 == 5);
+
+            estd::byte raw[sizeof(m1)];
+
+            //fv fv1(&m1, sizeof(m1));
+
+            //fv1.function()(5);
+
+            fb1.move_to((model_base*)raw);
+
+            fb fb2((model_base*) raw);
+
+            fb2(5);
+
+            REQUIRE(dummy.val1 == 10);
         }
     }
 #endif

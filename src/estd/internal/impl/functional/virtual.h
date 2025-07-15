@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../../../new.h"
+
 #include "fwd.h"
 
 #if defined(__cpp_variadic_templates) && defined(__cpp_rvalue_references)
@@ -14,7 +16,8 @@ struct function_virtual<Result(Args...)>
         virtual Result operator()(Args...args) = 0;
         virtual ~model_base() = default;
 #if FEATURE_ESTD_GH135
-        virtual void move(model_base*) = 0;
+        virtual void copy_to(model_base*) = 0;
+        virtual void move_to(model_base*) = 0;
 #endif
     };
 
@@ -34,10 +37,18 @@ struct function_virtual<Result(Args...)>
         }
 
 #if FEATURE_ESTD_GH135
-        void move(model_base* move_from) override
+        void copy_to(model_base* dest) override
         {
+            // DEBT: Doesn't work without forward, but does that mean we're forcing a move here?
+            // Test against 'Dummy' and find out and document either way and find a fix if this
+            // really is a move
+            new (dest) model(std::forward<F>(f));
+        }
 
-        };
+        void move_to(model_base* dest) override
+        {
+            new (dest) model(std::move(f));
+        }
 #endif
     };
 
@@ -58,10 +69,15 @@ struct function_virtual<Result(Args...)>
         }
 
 #if FEATURE_ESTD_GH135
-        void move(model_base* move_from) override
+        void copy_to(model_base* dest) override
         {
 
-        };
+        }
+
+        void move_to(model_base* dest) override
+        {
+
+        }
 #endif
     };
 };
