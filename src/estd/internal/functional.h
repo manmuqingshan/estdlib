@@ -372,6 +372,32 @@ inline typename detail::impl::function_default<TSignature>::template model<F> ma
     return make_model_impl<detail::impl::function_default<TSignature> >(std::move(f));
 }
 
+// Helper for inline/layer1 flavor
+// EXPERIMENTAL
+template <class Signature, template <class> class Impl>
+class function_view
+{
+    using function_type = detail::v2::function<Signature, Impl>;
+    using impl_type = typename function_type::impl_type;
+
+    function_type function_;
+    byte* data_;    // aka impl_type*
+    unsigned data_size_;
+
+public:
+    constexpr explicit function_view(
+        function_type function, byte* data, unsigned data_size) :
+        function_{function}, data_{data}, data_size_{data_size}
+    {}
+
+#if FEATURE_ESTD_GH135
+    void move()
+    {
+
+    }
+#endif
+};
+
 }
 
 #endif

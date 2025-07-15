@@ -33,13 +33,13 @@ using function_default = function_fnptr2<F>;
 }
 
 inline namespace v1 {
-template <typename F, class Impl = impl::function_default<F> >
+template <typename Signature, class Impl = impl::function_default<Signature> >
 class function;
 }
 
 namespace v2 {
-template <typename F, template <class> class Impl = impl::function_default >
-using function = detail::v1::function<F, Impl<F> >;
+template <typename Signature, template <class> class Impl = impl::function_default >
+using function = detail::v1::function<Signature, Impl<Signature> >;
 }
 
 }

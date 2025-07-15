@@ -17,4 +17,8 @@ struct function_fnptr2_opt;
 template <typename F>
 struct function_virtual;
 
+#ifndef FEATURE_ESTD_GH135
+#define FEATURE_ESTD_GH135 1
+#endif
+
 }}}

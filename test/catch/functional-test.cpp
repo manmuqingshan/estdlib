@@ -44,7 +44,7 @@ void forwarder(TArgs&&...args)
 }
 
 template <typename T>
-using fb = estd::detail::function<T, estd::detail::impl::function_virtual<T> >;
+using fb = detail::v2::function<T, detail::impl::function_virtual>;
 
 template <template <class> class Impl, typename F>
 struct ProvidedTest1;
@@ -363,14 +363,13 @@ TEST_CASE("functional")
             REQUIRE(std::string(got_something) == "hello");
         }
     }
-    SECTION("other impls")
+    SECTION("impls")
     {
         SECTION("explicit")
         {
             SECTION("virtual")
             {
-                typedef estd::detail::function<void(int), estd::detail::impl::function_virtual<void(
-                    int)> > _fb;
+                using _fb = detail::v2::function<void(int), detail::impl::function_virtual>;
 
                 struct model : _fb::model_base
                 {
@@ -380,6 +379,13 @@ TEST_CASE("functional")
                     }
 
                     int counter = 0;
+
+#if FEATURE_ESTD_GH135
+                    void move(model_base* move_from) override
+                    {
+
+                    };
+#endif
                 };
 
                 model m;
@@ -391,9 +397,7 @@ TEST_CASE("functional")
             }
             SECTION("fnptr1 (default)")
             {
-                //estd::detail::impl::function_fnptr2<void(int)>::
-                typedef estd::detail::impl::function_fnptr1<void(int)> model_type;
-                typedef detail::function<void(int), model_type> _fb;
+                using _fb = detail::v2::function<void(int), detail::impl::function_fnptr1>;
                 int value = 0;
 
                 //auto m = estd::internal::make_model<void(int)>(
@@ -766,6 +770,22 @@ TEST_CASE("functional")
     {
 
     }
+#if FEATURE_ESTD_GH135
+    SECTION("move")
+    {
+        test::Dummy dummy;
+
+        SECTION("virtual")
+        {
+            using fb = detail::v2::function<void(int), detail::impl::function_virtual>;
+
+            auto m1 = fb::make_model([=](int v)
+            {
+
+            });
+        }
+    }
+#endif
 }
 
 #endif

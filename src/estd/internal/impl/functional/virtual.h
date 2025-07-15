@@ -13,6 +13,9 @@ struct function_virtual<Result(Args...)>
     {
         virtual Result operator()(Args...args) = 0;
         virtual ~model_base() = default;
+#if FEATURE_ESTD_GH135
+        virtual void move(model_base*) = 0;
+#endif
     };
 
     template <class F>
@@ -29,6 +32,13 @@ struct function_virtual<Result(Args...)>
         {
             return f(std::forward<Args>(args)...);
         }
+
+#if FEATURE_ESTD_GH135
+        void move(model_base* move_from) override
+        {
+
+        };
+#endif
     };
 
 
@@ -46,6 +56,13 @@ struct function_virtual<Result(Args...)>
         {
             return (object_->*f)(std::forward<Args>(args)...);
         }
+
+#if FEATURE_ESTD_GH135
+        void move(model_base* move_from) override
+        {
+
+        };
+#endif
     };
 };
 

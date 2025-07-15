@@ -88,7 +88,7 @@ struct NonCopyable
 
     NonCopyable() {}
 
-    // technically we are somewhat-copyable with this explicit
+    // FIX: technically we are somewhat-copyable with this explicit
     // constructor
     explicit NonCopyable(const NonCopyable& copy_from) : val(copy_from.val) {}
 
