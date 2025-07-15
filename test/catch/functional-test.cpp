@@ -778,11 +778,16 @@ TEST_CASE("functional")
         SECTION("virtual")
         {
             using fb = detail::v2::function<void(int), detail::impl::function_virtual>;
+            using fv = internal::function_view<void(int), detail::impl::function_virtual>;
 
             auto m1 = fb::make_model([=](int v)
             {
-
             });
+
+            fv fv1(&m1, sizeof(m1));
+
+            fv1.function()(5);
+            fv1.move();
         }
     }
 #endif

@@ -378,10 +378,11 @@ template <class Signature, template <class> class Impl>
 class function_view
 {
     using function_type = detail::v2::function<Signature, Impl>;
-    using impl_type = typename function_type::impl_type;
+    //using impl_type = typename function_type::impl_type;
+    using model_base = typename function_type::model_base;
 
     function_type function_;
-    byte* data_;    // aka impl_type*
+    byte* data_;    // aka model_base*
     unsigned data_size_;
 
 public:
@@ -389,6 +390,15 @@ public:
         function_type function, byte* data, unsigned data_size) :
         function_{function}, data_{data}, data_size_{data_size}
     {}
+
+    constexpr explicit function_view(
+        model_base* model, unsigned data_size) :
+        function_{model}, data_{reinterpret_cast<byte*>(model)}, data_size_{data_size}
+    {}
+
+    // DEBT: Instead do a forwarding operator() - just holding off since Return
+    // treatment a bit non trivial
+    function_type& function() { return function_; }
 
 #if FEATURE_ESTD_GH135
     void move()
