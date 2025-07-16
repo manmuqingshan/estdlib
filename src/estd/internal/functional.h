@@ -238,6 +238,12 @@ public:
         m->move_to(dest);
         m = nullptr;
     }
+
+    // EXPERIMENTAL
+    void copy_to(model_base* dest)
+    {
+        m->copy_to(dest);
+    }
 #endif
 };
 

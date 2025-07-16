@@ -790,27 +790,38 @@ TEST_CASE("functional")
             auto m1 = fb::make_model([=](int v)
             {
                 dummy_ptr->val1 += v;
+                if(dummy.moved_)
+                    dummy_ptr->val1 += 1;
             });
 
             fb fb1(&m1);
 
             fb1(5);
 
-            REQUIRE(dummy.val1 == 5);
+            REQUIRE(dummy.val1 == 6);
 
-            estd::byte raw[sizeof(m1)];
+            estd::byte raw2[sizeof(m1)], raw3[sizeof(m1)];
 
             //fv fv1(&m1, sizeof(m1));
 
             //fv1.function()(5);
 
-            fb1.move_to((model_base*)raw);
+            fb1.move_to((model_base*)raw2);
 
-            fb fb2((model_base*) raw);
+            fb fb2((model_base*) raw2);
 
             fb2(5);
 
-            REQUIRE(dummy.val1 == 10);
+            REQUIRE(dummy.val1 == 12);
+
+            fb2.copy_to((model_base*)raw3);
+
+            fb fb3((model_base*) raw3);
+
+            fb3(5);
+
+            // Bleh, not encouraging - moved also.  Non-trivial
+            REQUIRE(dummy.val1 == 18);
         }
     }
 #endif
