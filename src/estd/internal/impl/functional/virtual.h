@@ -8,9 +8,11 @@
 
 namespace estd { namespace detail { namespace impl {
 
-template <typename Result, typename... Args>
-struct function_virtual<Result(Args...)>
+template <typename Result, typename... Args, fn_options o>
+struct function_virtual<Result(Args...), o>
 {
+    static constexpr fn_options options = o;
+
     struct model_base
     {
         virtual Result operator()(Args...args) = 0;

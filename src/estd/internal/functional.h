@@ -228,7 +228,7 @@ public:
     const model_base* getm() const { return m; }
 
     // EXPERIMENTAL
-    template <template <template <class> class, typename F, class ...TArgs2> class TProvided, class ...TArgs2>
+    template <template <template <class, impl::fn_options> class, typename F, class ...TArgs2> class TProvided, class ...TArgs2>
     using imbue = TProvided<detail::impl::function_fnptr1, TResult(TArgs...), TArgs2...>;
 
 #if FEATURE_ESTD_GH135
@@ -252,7 +252,7 @@ public:
 namespace internal {
 
 // DEBT: Might be better named as 'method', except that could be somewhat ambiguous
-template <typename Result, typename... Args, template <class> class Impl>
+template <typename Result, typename... Args, template <class, detail::impl::fn_options> class Impl>
 class thisify_function<Result(Args...), Impl> :
     public detail::v2::function<Result(Args...), Impl>
 {
@@ -389,7 +389,7 @@ inline typename detail::impl::function_default<TSignature>::template model<F> ma
 
 // Helper for inline/layer1 flavor
 // EXPERIMENTAL
-template <class Signature, template <class> class Impl>
+template <class Signature, template <class, detail::impl::fn_options> class Impl>
 class function_view
 {
     using function_type = detail::v2::function<Signature, Impl>;

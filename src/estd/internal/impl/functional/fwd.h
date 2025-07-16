@@ -8,27 +8,29 @@ namespace estd { namespace detail { namespace impl {
 // which means virtual, fnptr1 and fnptr2 must all match
 enum fn_options
 {
-    FN_NONE,
+    FN_NONE2,
     FN_COPY,
     FN_MOVE,
-    FN_DTOR
+    FN_DTOR,
+
+    FN_DEFAULT = FN_NONE2,
 };
 
 ESTD_FLAGS(fn_options)
 
-template <typename F>
+template <typename F, fn_options = FN_DEFAULT>
 struct function_fnptr1;
 
-template <typename F>
+template <typename F, fn_options = FN_DEFAULT>
 struct function_fnptr1_opt;
 
-template <typename F>
+template <typename F, fn_options = FN_DEFAULT>
 struct function_fnptr2;
 
-template <typename F>
+template <typename F, fn_options = FN_DEFAULT>
 struct function_fnptr2_opt;
 
-template <typename F>
+template <typename F, fn_options = FN_DEFAULT>
 struct function_virtual;
 
 #ifndef FEATURE_ESTD_GH135

@@ -38,8 +38,9 @@ class function;
 }
 
 namespace v2 {
-template <typename Signature, template <class> class Impl = impl::function_default >
-using function = detail::v1::function<Signature, Impl<Signature> >;
+template <typename Signature, template <class, impl::fn_options> class Impl = impl::function_default,
+    impl::fn_options o = impl::FN_DEFAULT>
+using function = detail::v1::function<Signature, Impl<Signature, o> >;
 }
 
 }
@@ -48,7 +49,7 @@ namespace internal {
 
 struct function_base_tag {};
 
-template <typename F, template <class> class Impl = detail::impl::function_fnptr1>
+template <typename F, template <class, detail::impl::fn_options> class Impl = detail::impl::function_fnptr1>
 class thisify_function;
 
 #ifdef __cpp_variadic_templates

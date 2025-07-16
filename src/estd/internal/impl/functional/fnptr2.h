@@ -13,8 +13,8 @@
 namespace estd { namespace detail { namespace impl {
 
 
-template <typename Result, typename... Args>
-struct function_fnptr2<Result(Args...)>
+template <typename Result, typename... Args, fn_options o>
+struct function_fnptr2<Result(Args...), o>
 {
 #if FEATURE_ESTD_GH135
     enum modes
@@ -24,6 +24,8 @@ struct function_fnptr2<Result(Args...)>
         DELETE
     };
 #endif
+
+    static constexpr fn_options options = o;
 
     struct utility_base
     {

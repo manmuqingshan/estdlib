@@ -46,10 +46,10 @@ void forwarder(TArgs&&...args)
 template <typename T>
 using fb = detail::v2::function<T, detail::impl::function_virtual>;
 
-template <template <class> class Impl, typename F>
+template <template <class, detail::impl::fn_options> class Impl, typename F>
 struct ProvidedTest1;
 
-template <template <class> class Impl, typename TResult, typename ...TArgs>
+template <template <class, detail::impl::fn_options> class Impl, typename TResult, typename ...TArgs>
 struct ProvidedTest1<Impl, TResult(TArgs...)>
 {
     typedef TResult (test)(TArgs...);
@@ -57,10 +57,10 @@ struct ProvidedTest1<Impl, TResult(TArgs...)>
     static TResult test2(TArgs...) { return TResult(); }
 };
 
-template <template <class> class Impl, typename F, typename TDummy>
+template <template <class, detail::impl::fn_options> class Impl, typename F, typename TDummy>
 struct ProvidedTest2;
 
-template <template <class> class Impl, typename TResult, typename ...TArgs, class TDummy>
+template <template <class, detail::impl::fn_options> class Impl, typename TResult, typename ...TArgs, class TDummy>
 struct ProvidedTest2<Impl, TResult(TArgs...), TDummy>
 {
     TDummy value2;

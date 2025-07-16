@@ -16,7 +16,7 @@ namespace internal { namespace impl {
 template <typename F, typename... Contexts>
 struct function_context_provider_base;
 
-template <template <class> class Impl, typename F, typename... Contexts>
+template <template <class, detail::impl::fn_options> class Impl, typename F, typename... Contexts>
 struct function_context_provider;
 
 // Adapting from 'context_function'
@@ -32,14 +32,14 @@ struct function_context_provider_base<Result(Args...), Contexts...>
     using contexts_type = estd::tuple<Contexts...>;
 };
 
-template <template <class> class Impl, typename Result, typename... Args, typename... Contexts>
+template <template <class, detail::impl::fn_options> class Impl, typename Result, typename... Args, typename... Contexts>
 struct function_context_provider<Impl, Result(Args...), Contexts...> :
     function_context_provider_base<Result(Args...), Contexts...>
 {
     using base_type = function_context_provider_base<Result(Args...), Contexts...>;
 
 protected:
-    using impl_type = Impl<Result(Args...)>;
+    using impl_type = Impl<Result(Args...), detail::impl::FN_DEFAULT>;
     using model_base = typename impl_type::model_base;
     using typename base_type::contexts_type;
 
@@ -85,14 +85,15 @@ public:
     using provided = Provided<Result(Args...)>;
 };
 
-// EXPERIMENTATION
-template <template <class> class Impl, typename Result, typename... Args>
+template <template <class, detail::impl::fn_options> class Impl, typename Result, typename... Args>
 struct function_context_provider<
-    Impl,
-    detail::v2::function<Result(Args...), Impl> > :
+        Impl,
+        detail::v2::function<Result(Args...), Impl> > :
     function_context_provider<Impl, Result(Args...)>
 {
 };
+
+// EXPERIMENTATION
 
 // Almost, but not quite
 /*
@@ -131,11 +132,11 @@ struct method_model_helper2
 // ---
 
 template <typename F, typename T, method_type<F, T> f,
-    template <class> class Impl = detail::impl::function_fnptr1>
+    template <class, detail::impl::fn_options> class Impl = detail::impl::function_fnptr1>
 struct method_model;
 
 template <typename Result, typename... Args, class T,
-    method_type<Result(Args...), T> f, template <class> class Impl>
+    method_type<Result(Args...), T> f, template <class, detail::impl::fn_options> class Impl>
 struct method_model<Result(Args...), T, f, Impl> :
     function_context_provider<Impl, Result(Args...)>::template model<T, f>
 {
