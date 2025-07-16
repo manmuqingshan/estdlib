@@ -1,6 +1,6 @@
 #pragma once
 
-#include <estd/internal/type_traits.h>
+#include "internal/type_traits/is_trivial.h"
 
 #include "internal/fwd/flags.h"
 

@@ -1,7 +1,6 @@
 #pragma once
 
-// FIX: Feels like a namespace conflict occurs
-//#include "../../../flags.h"
+#include "../../../flags.h"
 
 namespace estd { namespace detail { namespace impl {
 
@@ -15,7 +14,7 @@ enum fn_options
     FN_DTOR
 };
 
-//ESTD_FLAGS(fn_options)
+ESTD_FLAGS(fn_options)
 
 template <typename F>
 struct function_fnptr1;
