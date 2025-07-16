@@ -24,6 +24,10 @@ struct function_virtual<Result(Args...)>
     template <class F>
     struct model : model_base
     {
+        constexpr explicit model(const F& u) :
+            f(u)
+        {}
+
         constexpr explicit model(F&& u) :
             f(std::forward<F>(u))
         {
@@ -39,10 +43,7 @@ struct function_virtual<Result(Args...)>
 #if FEATURE_ESTD_GH135
         void copy_to(model_base* dest) override
         {
-            // DEBT: Doesn't work without forward, but does that mean we're forcing a move here?
-            // Test against 'Dummy' and find out and document either way and find a fix if this
-            // really is a move
-            new (dest) model(std::forward<F>(f));
+            new (dest) model(f);
         }
 
         void move_to(model_base* dest) override

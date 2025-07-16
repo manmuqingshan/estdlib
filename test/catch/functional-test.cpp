@@ -781,6 +781,33 @@ TEST_CASE("functional")
         test::Dummy dummy(0, "hello");
         test::Dummy* dummy_ptr = &dummy;
 
+        SECTION("fnptr2")
+        {
+            using fb = detail::v2::function<void(int), detail::impl::function_fnptr2>;
+            using model_base = typename fb::model_base;
+
+            auto m1 = fb::make_model([=](int v)
+            {
+                dummy_ptr->val1 += v;
+                if(dummy.moved_)    ++dummy_ptr->val1;
+            });
+
+            fb fb1(&m1);
+
+            fb1(5);
+
+            REQUIRE(dummy.val1 == 6);
+
+            estd::byte raw2[sizeof(m1)], raw3[sizeof(m1)];
+
+            fb1.move_to((model_base*)raw2);
+
+            fb fb2((model_base*) raw2);
+
+            fb2(5);
+
+            REQUIRE(dummy.val1 == 12);
+        }
         SECTION("virtual")
         {
             using fb = detail::v2::function<void(int), detail::impl::function_virtual>;
@@ -820,8 +847,7 @@ TEST_CASE("functional")
 
             fb3(5);
 
-            // Bleh, not encouraging - moved also.  Non-trivial
-            REQUIRE(dummy.val1 == 18);
+            REQUIRE(dummy.val1 == 17);
         }
     }
 #endif

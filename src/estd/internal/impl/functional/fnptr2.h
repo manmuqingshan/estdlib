@@ -16,9 +16,29 @@ namespace estd { namespace detail { namespace impl {
 template <typename Result, typename... Args>
 struct function_fnptr2<Result(Args...)>
 {
+#if FEATURE_ESTD_GH135
+    enum modes
+    {
+        COPY,
+        MOVE,
+        DELETE
+    };
+#endif
+
+    struct utility_base
+    {
+        // DEBT: Make this optional and default to off
+
+        // mode, model in, model out
+        typedef void (*utility_type)(modes, void*, void*);
+        utility_type u_{};
+    };
+
     // this is a slightly less fancy more brute force approach to try to diagnose esp32
     // woes
-    struct model_base
+    struct model_base : conditional_t<false,
+        monostate,
+        utility_base>
     {
         typedef Result (*function_type)(void*, Args...);
         typedef void (*deleter_type)();
@@ -59,18 +79,54 @@ struct function_fnptr2<Result(Args...)>
         {
             return _f(this, std::forward<Args>(args)...);
         }
+
+#if FEATURE_ESTD_GH135
+        void copy_to(model_base* dest)
+        {
+            utility_base::u_(COPY, this, dest);
+        }
+
+        void move_to(model_base* dest)
+        {
+            utility_base::u_(MOVE, this, dest);
+        }
+#endif
     };
 
     template <typename F>
     struct model : model_base
     {
-        typedef model_base base_type;
+        using base_type = model_base;
+
+#if FEATURE_ESTD_GH135
+        static void utility(modes mode, void* src, void* dest)
+        {
+            auto this_ = static_cast<model*>(src);
+
+            switch(mode)
+            {
+                case COPY:
+                    //new (dest) model(this_->f);
+                    break;
+
+                case MOVE:
+                    new (dest) model(std::move(this_->f));
+                    break;
+
+                case DELETE:
+                    break;
+            }
+        }
+#endif
 
         //template <typename U>
         constexpr explicit model(F&& u) :
             base_type(static_cast<typename base_type::function_type>(&model::exec)),
             f(std::forward<F>(u))
         {
+#if FEATURE_ESTD_GH135
+            base_type::u_ = utility;
+#endif
         }
 
         /*
