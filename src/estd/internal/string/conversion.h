@@ -6,7 +6,7 @@
 #include "../charconv/result.h"
 
 #ifndef FEATURE_ESTD_GH134
-#define FEATURE_ESTD_GH134 1
+#define FEATURE_ESTD_GH134 0
 #endif
 
 namespace estd { namespace internal {

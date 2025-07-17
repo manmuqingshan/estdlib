@@ -6,13 +6,21 @@
 
 #include "result.h"
 
+// DEBT: Relate/combine with FEATURE_ESTD_OSTREAM_OCTAL
+// from_chars treatment of octal is inherent, no feature flag needed
+// calling this STOI since this only applies to sto_mode = true
+#ifndef FEATURE_ESTD_STOI_OCTAL
+#define FEATURE_ESTD_STOI_OCTAL 1
+#endif
+
+
 namespace estd { namespace internal {
 
 // We need Cbase and runtime base, Cbase indicates whether we do alphanum or just num
 template<class Cbase, bool sto_mode = false, class T, class CharIt>
 ESTD_CPP_CONSTEXPR(14) detail::from_chars_result<CharIt> from_chars_integer(CharIt first, CharIt last,
     T& value,
-    const unsigned short base = Cbase::base())
+    unsigned short base = Cbase::base())
 {
     using cbase_type = Cbase;
     using optional_type =  typename cbase_type::optional_type;
@@ -55,6 +63,14 @@ ESTD_CPP_CONSTEXPR(14) detail::from_chars_result<CharIt> from_chars_integer(Char
         const optional_type digit = cbase_type::from_char(*current, base);
         if(digit.has_value())
         {
+            if ESTD_CPP_CONSTEXPR(17) (sto_mode)
+            {
+                if(base == 0 && current == first && digit.value() == 0)
+                {
+                    // Prep for octal or hex detection
+                }
+            }
+
             bool success = raise_and_add(local_value, base, digit.value());
 
             // If we didn't succeed, that means we overflowed
@@ -77,10 +93,11 @@ ESTD_CPP_CONSTEXPR(14) detail::from_chars_result<CharIt> from_chars_integer(Char
             if(sto_mode)
             {
                 // Look for 0x, 0X
-                if(base == 16 && current == first + 1)
+                if((base == 16 || base == 0) && current == first + 1)
                 {
                     if(local_value == 0 && (*current == 'x' || *current == 'X'))
                     {
+                        base = 16;
                         ++current;
                         continue;
                     }
