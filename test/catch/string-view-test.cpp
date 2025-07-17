@@ -177,6 +177,17 @@ TEST_CASE("string_view")
 
         REQUIRE(!s.empty());
     }
+    SECTION("stoi")
+    {
+        // std doesn't do this, but we do
+        // https://github.com/malachi-iot/estdlib/issues/123
+
+        constexpr string_view s1("0x1234");
+
+        const int v = stoi(s1, nullptr, 16);
+
+        REQUIRE(v == 0x1234);
+    }
 }
 
 

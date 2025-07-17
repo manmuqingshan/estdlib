@@ -6,7 +6,7 @@
 #include "../charconv/result.h"
 
 #ifndef FEATURE_ESTD_GH134
-#define FEATURE_ESTD_GH134 0
+#define FEATURE_ESTD_GH134 1
 #endif
 
 namespace estd { namespace internal {
@@ -32,7 +32,7 @@ Int stoi(
 
 #if FEATURE_ESTD_GH134
 template <ESTD_CPP_CONCEPT(concepts::v1::impl::String) Impl>
-long stol(
+ESTD_CPP_CONSTEXPR(14) long stol(
     const detail::basic_string<Impl>& str,
     size_t* pos = nullptr, int base = 10)
 {
@@ -40,7 +40,7 @@ long stol(
 }
 
 template <ESTD_CPP_CONCEPT(concepts::v1::impl::String) Impl>
-int stoi(
+ESTD_CPP_CONSTEXPR(14) int stoi(
     const detail::basic_string<Impl>& str,
     size_t* pos = nullptr, int base = 10)
 {
@@ -48,7 +48,7 @@ int stoi(
 }
 
 template <ESTD_CPP_CONCEPT(concepts::v1::impl::String) Impl>
-int stoul(
+ESTD_CPP_CONSTEXPR(14) unsigned long stoul(
     const detail::basic_string<Impl>& str,
     size_t* pos = nullptr, int base = 10)
 {
