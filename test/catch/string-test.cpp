@@ -707,6 +707,13 @@ TEST_CASE("string tests")
             // However it seems that explicit base must still be specified
             REQUIRE(value == 0x100);
         }
+        SECTION("internal::stoi")
+        {
+            estd::layer2::const_string s = "0x100";
+            int value = estd::internal::stoi<int>(s, nullptr, 16);
+
+            REQUIRE(value == 0x100);
+        }
     }
     SECTION("errc")
     {

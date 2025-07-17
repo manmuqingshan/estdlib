@@ -6,6 +6,7 @@
 #include "system_error.h"
 #include "cctype.h"
 #include "type_traits.h"
+#include "internal/charconv/fwd.h"
 #include "internal/charconv.hpp"
 #include "algorithm.h"
 
@@ -69,17 +70,17 @@ to_chars(CharIt first, CharIt last, Int value)
 }
 
 
-template <class Int>
+template <class Int, bool sto_mode>
 inline typename estd::enable_if<estd::numeric_limits<Int>::is_integer, from_chars_result>::type
     from_chars(const char* first,
         const char* last,
         Int& value,
-        const int base = 10)
+        const int base)
 {
     if(base > 10)
-        return internal::from_chars_integer<36>(first, last, value, base);
+        return internal::from_chars_integer<36, sto_mode>(first, last, value, base);
     else
-        return internal::from_chars_integer<10>(first, last, value, base);
+        return internal::from_chars_integer<10, sto_mode>(first, last, value, base);
 }
 
 // TODO: Needs bounds check on to_chars

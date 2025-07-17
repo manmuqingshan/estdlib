@@ -5,6 +5,7 @@
 #endif
 
 #include "fwd/string.h"
+#include "string/conversion.h"
 #include "string/hash.h"
 #include "string/operators.h"
 
@@ -69,14 +70,14 @@ protected:
         return helper::compare(*this, s, s_size);
     }
 
-    // +++ non-locking helpers, protected so only conforming child classes expose them
-
+    // +++ non-locking helpers, public = OK since static_assert protects us
+public:
     // DEBT: It's OK putting this guy here, but he's a helper, not an official thing.  Would be
     // better if we consolidated a 'capabilities' area with RFC flavor
     static constexpr bool is_locking =
         allocator_type::options & estd::internal::allocator_options::locking;
 
-    ESTD_CPP_CONSTEXPR(17) pointer data()
+    ESTD_CPP_CONSTEXPR(14) pointer data()
     {
         static_assert(is_locking == false, "This API would leave lock open, so disabled");
         return base_type::lock();
@@ -101,7 +102,6 @@ protected:
 
     // ---
 
-public:
     constexpr basic_string() = default;
 
     constexpr size_type length() const { return base_type::size(); }

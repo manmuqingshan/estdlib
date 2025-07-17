@@ -68,7 +68,7 @@ public:
 
 }
 
-
+#if FEATURE_ESTD_GH134 == 0
 // FIX: This doesn't account for conversion errors, but should.  std version
 // throws exceptions
 // DEBT: Rework to use num_get/from_string - doing so will make it easier
@@ -117,7 +117,7 @@ unsigned long stoul(
 
     return result;
 }
-
+#endif
 
 // TODO: Utilized optimized version for int precision only
 // NOTE: Interestingly, spec calls for stoi to call strtol or wcstol.

@@ -1,0 +1,32 @@
+#pragma once
+
+//#include "../../charconv.h"
+#include "../fwd/string.h"
+#include "../charconv/fwd.h"
+#include "../charconv/result.h"
+
+#ifndef FEATURE_ESTD_GH134
+#define FEATURE_ESTD_GH134 0
+#endif
+
+namespace estd { namespace internal {
+
+template <class Int, class Impl>
+Int stoi(
+    const detail::basic_string<Impl>& str,
+    size_t* pos = nullptr, int base = 10)
+{
+    Int v;
+    using char_type = typename Impl::policy_type::char_traits::char_type;
+
+    const char_type* data = str.data();
+    const from_chars_result r = estd::from_chars<Int, true>(data, data + str.size(), v, base);
+
+    // Backchannel error status as '0' chars processed since we don't do exceptions
+    if(pos)     *pos = r.ec == 0 ? (r.ptr - data) : 0;
+
+    return v;
+}
+
+
+}}

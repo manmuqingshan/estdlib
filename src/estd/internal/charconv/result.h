@@ -6,6 +6,8 @@
 #include "../deduce_fixed_size.h"
 #include "../text/encodings.h"
 
+#include "fwd.h"
+
 namespace estd {
 
 namespace detail {
@@ -50,7 +52,6 @@ struct to_chars_result
  */
 
 typedef detail::to_chars_result<char*> to_chars_result;
-typedef detail::from_chars_result<const char*> from_chars_result;
 
 
 }
