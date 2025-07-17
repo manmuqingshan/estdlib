@@ -71,7 +71,7 @@ to_chars(CharIt first, CharIt last, Int value)
 
 
 template <class Int, bool sto_mode>
-inline typename estd::enable_if<estd::numeric_limits<Int>::is_integer, from_chars_result>::type
+inline enable_if_t<numeric_limits<Int>::is_integer, from_chars_result>
     from_chars(const char* first,
         const char* last,
         Int& value,

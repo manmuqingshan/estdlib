@@ -11,7 +11,7 @@
 
 namespace estd { namespace internal {
 
-template <class Int, class Impl>
+template <class Int, ESTD_CPP_CONCEPT(concepts::v1::impl::String) Impl>
 Int stoi(
     const detail::basic_string<Impl>& str,
     size_t* pos = nullptr, int base = 10)
@@ -28,5 +28,32 @@ Int stoi(
     return v;
 }
 
+}
 
-}}
+#if FEATURE_ESTD_GH134
+template <ESTD_CPP_CONCEPT(concepts::v1::impl::String) Impl>
+long stol(
+    const detail::basic_string<Impl>& str,
+    size_t* pos = nullptr, int base = 10)
+{
+    return internal::stoi<long>(str, pos, base);
+}
+
+template <ESTD_CPP_CONCEPT(concepts::v1::impl::String) Impl>
+int stoi(
+    const detail::basic_string<Impl>& str,
+    size_t* pos = nullptr, int base = 10)
+{
+    return internal::stoi<int>(str, pos, base);
+}
+
+template <ESTD_CPP_CONCEPT(concepts::v1::impl::String) Impl>
+int stoul(
+    const detail::basic_string<Impl>& str,
+    size_t* pos = nullptr, int base = 10)
+{
+    return internal::stoi<unsigned long>(str, pos, base);
+}
+#endif
+
+}

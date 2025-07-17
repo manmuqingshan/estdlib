@@ -117,7 +117,6 @@ unsigned long stoul(
 
     return result;
 }
-#endif
 
 // TODO: Utilized optimized version for int precision only
 // NOTE: Interestingly, spec calls for stoi to call strtol or wcstol.
@@ -130,6 +129,7 @@ int stoi(
 {
     return (int) stol(str, pos, base);
 }
+#endif
 
 // TODO: Consider a strlen_c or similar using recursion.  That might accommodate a c++11
 // constexpr requirement
