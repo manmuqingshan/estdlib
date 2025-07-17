@@ -8,10 +8,9 @@
 
 namespace estd { namespace internal {
 
-// DEBT: Document why we aren't taking advantage of constexpr base, look to comment
-// at top of charconv.h
+// We need Cbase and runtime base, Cbase indicates whether we do alphanum or just num
 template<class Cbase, bool sto_mode = false, class T, class CharIt>
-detail::from_chars_result<CharIt> from_chars_integer(CharIt first, CharIt last,
+ESTD_CPP_CONSTEXPR(14) detail::from_chars_result<CharIt> from_chars_integer(CharIt first, CharIt last,
     T& value,
     const unsigned short base = Cbase::base())
 {
@@ -21,7 +20,7 @@ detail::from_chars_result<CharIt> from_chars_integer(CharIt first, CharIt last,
 
     // DEBT: Expand this to allow any numeric type, we'll have to make specialized
     // versions of raise_and_add to account for that
-    static_assert(estd::is_integral<T>::value, "T must be integral type");
+    static_assert(is_integral<T>::value, "T must be integral type");
 
     CharIt current = first;
     bool negate;

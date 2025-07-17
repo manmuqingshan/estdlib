@@ -20,6 +20,16 @@
 
 namespace estd { namespace internal {
 
+template<unsigned b, bool sto_mode = false, class T, class CharIt>
+ESTD_CPP_CONSTEXPR(14) estd::detail::from_chars_result<CharIt> from_chars_integer(CharIt first, CharIt last,
+    T& value,
+    const unsigned short base = b)
+{
+    return internal::from_chars_integer<
+        cbase<char, b, classic_locale_type>, sto_mode>(first, last, value, base);
+}
+
+
 // DEBT: to_chars bounds checking here is quite weak
 
 /// Performs to_chars slightly differently than stock.  returned 'ptr' is beginning
