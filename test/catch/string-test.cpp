@@ -667,7 +667,7 @@ TEST_CASE("string tests")
         {
             std::size_t len;
             estd::layer2::const_string val = "1234";
-            long value = estd::stoul(val, &len);
+            unsigned long value = estd::stoul(val, &len);
 
             REQUIRE(value == 1234);
             REQUIRE(len == 4);

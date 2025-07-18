@@ -4,22 +4,15 @@
 #include "../locale/ctype.h"
 #include "../raise_and_add.h"
 
+#include "features.h"
 #include "result.h"
-
-// DEBT: Relate/combine with FEATURE_ESTD_OSTREAM_OCTAL
-// from_chars treatment of octal is inherent, no feature flag needed
-// calling this STOI since this only applies to sto_mode = true
-#ifndef FEATURE_ESTD_STOI_OCTAL
-#define FEATURE_ESTD_STOI_OCTAL 1
-#endif
-
 
 namespace estd { namespace internal {
 
 // We need Cbase and runtime base, Cbase indicates whether we do alphanum or just num,
 // while 'base' itself is actual calculated base
-// DEBT: Either remove constexpr indication here, or rework to return a pair.  Not doing
-// latter because it may impact non-constexpr optimization
+// DEBT: Either remove constexpr indication here, or rework to return a pair.  Also, raise_and_add
+// would need a separate constexpr flavor.  Has non-trivial impact on non-constexpr optimization
 // DEBT: Look into whether a constexpr/'base' helper is a worthwhile optimization
 template<class Cbase, bool sto_mode = false, class T, class CharIt>
 ESTD_CPP_CONSTEXPR(14) detail::from_chars_result<CharIt> from_chars_integer(CharIt first, CharIt last,
@@ -72,7 +65,7 @@ ESTD_CPP_CONSTEXPR(14) detail::from_chars_result<CharIt> from_chars_integer(Char
         const optional_type digit = cbase_type::from_char(*current, base);
         if(digit.has_value())
         {
-#if FEATURE_ESTD_STOI_OCTAL
+#if FEATURE_ESTD_FROM_CHARS_OCTAL
             if ESTD_CPP_CONSTEXPR(17) (sto_mode)
             {
                 // Reach here when first character was '0' and base == 0 (autodeduce)

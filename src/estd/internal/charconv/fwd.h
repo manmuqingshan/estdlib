@@ -2,6 +2,7 @@
 
 #include "../type_traits.h"
 #include "../../limits.h"
+#include "features.h"
 
 namespace estd {
 

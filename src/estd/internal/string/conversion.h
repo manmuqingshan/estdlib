@@ -1,7 +1,7 @@
 #pragma once
 
-//#include "../../charconv.h"
 #include "../fwd/string.h"
+#include "../charconv/features.h"
 #include "../charconv/fwd.h"
 #include "../charconv/result.h"
 
@@ -12,10 +12,6 @@
 
 #if FEATURE_ESTD_EXCEPTIONS
 #include <exception>
-#endif
-
-#ifndef FEATURE_ESTD_GH134
-#define FEATURE_ESTD_GH134 0
 #endif
 
 namespace estd { namespace internal {
