@@ -10,7 +10,7 @@ namespace estd { namespace chrono {
 // NOTE: Not well tested for operations across different duration types
 template< class Rep1, class Period1, class Rep2, class Period2 >
 typename estd::common_type<duration<Rep1,Period1>, duration<Rep2,Period2> >::type
-CONSTEXPR operator-( const duration<Rep1,Period1>& lhs,
+constexpr operator-( const duration<Rep1,Period1>& lhs,
     const duration<Rep2,Period2>& rhs )
 {
     typedef typename common_type<duration<Rep1, Period1>,
@@ -23,7 +23,7 @@ CONSTEXPR operator-( const duration<Rep1,Period1>& lhs,
 
 template< class Rep1, class Period1, class Rep2, class Period2 >
 typename estd::common_type<duration<Rep1,Period1>, duration<Rep2,Period2> >::type
-CONSTEXPR operator+( const duration<Rep1,Period1>& lhs,
+constexpr operator+( const duration<Rep1,Period1>& lhs,
     const duration<Rep2,Period2>& rhs )
 {
     typedef typename common_type<duration<Rep1, Period1>,
@@ -35,7 +35,7 @@ CONSTEXPR operator+( const duration<Rep1,Period1>& lhs,
 
 template< class Rep1, class Period, class Rep2>
 duration<typename estd::common_type<Rep1,Rep2>::type, Period>
-CONSTEXPR operator*( const duration<Rep1,Period>& lhs,
+constexpr operator*( const duration<Rep1,Period>& lhs,
     const Rep2& rhs )
 {
     typedef duration<
@@ -48,7 +48,7 @@ CONSTEXPR operator*( const duration<Rep1,Period>& lhs,
 
 
 template <class Rep1, class Period1, class Rep2, class Period2>
-CONSTEXPR bool operator>(const duration<Rep1, Period1>& lhs,
+constexpr bool operator>(const duration<Rep1, Period1>& lhs,
     const duration<Rep2, Period2>& rhs)
 {
     typedef typename estd::common_type<estd::chrono::duration<Rep1, Period1>,
@@ -58,7 +58,7 @@ CONSTEXPR bool operator>(const duration<Rep1, Period1>& lhs,
 }
 
 template <class Rep1, class Period1, class Rep2, class Period2>
-CONSTEXPR bool operator<(const duration<Rep1, Period1>& lhs,
+constexpr bool operator<(const duration<Rep1, Period1>& lhs,
     const duration<Rep2, Period2>& rhs)
 {
     typedef typename estd::common_type<estd::chrono::duration<Rep1, Period1>,
@@ -68,7 +68,7 @@ CONSTEXPR bool operator<(const duration<Rep1, Period1>& lhs,
 }
 
 template <class Rep1, class Period1, class Rep2, class Period2>
-CONSTEXPR bool operator<=(const duration<Rep1, Period1>& lhs,
+constexpr bool operator<=(const duration<Rep1, Period1>& lhs,
     const duration<Rep2, Period2>& rhs)
 {
     return !(lhs > rhs);
@@ -76,7 +76,7 @@ CONSTEXPR bool operator<=(const duration<Rep1, Period1>& lhs,
 
 
 template <class Rep1, class Period1, class Rep2, class Period2>
-CONSTEXPR bool operator>=(const duration<Rep1, Period1>& lhs,
+constexpr bool operator>=(const duration<Rep1, Period1>& lhs,
     const duration<Rep2, Period2>& rhs)
 {
     return !(lhs < rhs);
@@ -84,17 +84,17 @@ CONSTEXPR bool operator>=(const duration<Rep1, Period1>& lhs,
 
 
 template <class Rep1, class Period1, class Rep2, class Period2>
-CONSTEXPR bool operator==(const duration<Rep1, Period1>& lhs,
+constexpr bool operator==(const duration<Rep1, Period1>& lhs,
     const duration<Rep2, Period2>& rhs)
 {
-    typedef typename estd::common_type<estd::chrono::duration<Rep1, Period1>,
-        estd::chrono::duration<Rep2, Period2> >::type CT;
+    using CT = common_type_t<duration<Rep1, Period1>,
+        duration<Rep2, Period2> >;
 
     return CT(lhs).count() == CT(rhs).count();
 }
 
 template <class Rep1, class Period1, class Rep2, class Period2>
-CONSTEXPR bool operator!=(const duration<Rep1, Period1>& lhs,
+constexpr bool operator!=(const duration<Rep1, Period1>& lhs,
     const duration<Rep2, Period2>& rhs)
 {
     typedef typename estd::common_type<estd::chrono::duration<Rep1, Period1>,
@@ -105,7 +105,7 @@ CONSTEXPR bool operator!=(const duration<Rep1, Period1>& lhs,
 
 
 template< class C, class D1, class D2 >
-CONSTEXPR typename estd::common_type<D1,D2>::type
+constexpr typename estd::common_type<D1,D2>::type
 operator-( const time_point<C,D1>& pt_lhs,
     const time_point<C,D2>& pt_rhs )
 {
@@ -114,7 +114,7 @@ operator-( const time_point<C,D1>& pt_lhs,
 
 
 template< class Clock, class Dur1, class Dur2 >
-CONSTEXPR bool operator<( const time_point<Clock,Dur1>& lhs,
+constexpr bool operator<( const time_point<Clock,Dur1>& lhs,
     const time_point<Clock,Dur2>& rhs )
 {
     return lhs.time_since_epoch() < rhs.time_since_epoch();
@@ -122,14 +122,22 @@ CONSTEXPR bool operator<( const time_point<Clock,Dur1>& lhs,
 
 
 template< class Clock, class Dur1, class Dur2 >
-CONSTEXPR bool operator>( const time_point<Clock,Dur1>& lhs,
+constexpr bool operator<=( const time_point<Clock,Dur1>& lhs,
+    const time_point<Clock,Dur2>& rhs )
+{
+    return lhs.time_since_epoch() <= rhs.time_since_epoch();
+}
+
+
+template< class Clock, class Dur1, class Dur2 >
+constexpr bool operator>( const time_point<Clock,Dur1>& lhs,
     const time_point<Clock,Dur2>& rhs )
 {
     return lhs.time_since_epoch() > rhs.time_since_epoch();
 }
 
 template< class Clock, class Dur1, class Dur2 >
-CONSTEXPR bool operator>=( const time_point<Clock,Dur1>& lhs,
+constexpr bool operator>=( const time_point<Clock,Dur1>& lhs,
     const time_point<Clock,Dur2>& rhs )
 {
     return lhs.time_since_epoch() >= rhs.time_since_epoch();
@@ -137,14 +145,14 @@ CONSTEXPR bool operator>=( const time_point<Clock,Dur1>& lhs,
 
 
 template< class Clock, class Dur1, class Dur2 >
-CONSTEXPR bool operator==( const time_point<Clock,Dur1>& lhs,
+constexpr bool operator==( const time_point<Clock,Dur1>& lhs,
     const time_point<Clock,Dur2>& rhs )
 {
     return lhs.time_since_epoch() == rhs.time_since_epoch();
 }
 
 template< class Clock, class Dur1, class Dur2 >
-CONSTEXPR bool operator!=( const time_point<Clock,Dur1>& lhs,
+constexpr bool operator!=( const time_point<Clock,Dur1>& lhs,
     const time_point<Clock,Dur2>& rhs )
 {
     return lhs.time_since_epoch() != rhs.time_since_epoch();

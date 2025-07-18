@@ -87,7 +87,7 @@ struct unix_epoch_clock_tag {};
 // prior to C++20.  I haven't found any API in the spec which actually reflects that though, so
 // we make our own.
 // DEBT: Just found a very similar one, https://en.cppreference.com/w/cpp/chrono/clock_time_conversion
-template <class TClock>
+template <class Clock>
 struct clock_traits;
 
 
@@ -138,54 +138,58 @@ constexpr ToDuration duration_cast(const duration<Rep, Period>& d);
 
 template< class Rep1, class Period1, class Rep2, class Period2 >
 typename estd::common_type<duration<Rep1,Period1>, duration<Rep2,Period2> >::type
-CONSTEXPR operator-( const duration<Rep1,Period1>& lhs,
+constexpr operator-( const duration<Rep1,Period1>& lhs,
     const duration<Rep2,Period2>& rhs );
 
 template< class Rep1, class Period1, class Rep2, class Period2 >
 typename estd::common_type<duration<Rep1,Period1>, duration<Rep2,Period2> >::type
-CONSTEXPR operator+( const duration<Rep1,Period1>& lhs,
+constexpr operator+( const duration<Rep1,Period1>& lhs,
     const duration<Rep2,Period2>& rhs );
 
 template <class Rep1, class Period1, class Rep2, class Period2>
-CONSTEXPR bool operator>(const duration<Rep1, Period1>& lhs,
+constexpr bool operator>(const duration<Rep1, Period1>& lhs,
     const duration<Rep2, Period2>& rhs);
 
 template <class Rep1, class Period1, class Rep2, class Period2>
-CONSTEXPR bool operator<(const duration<Rep1, Period1>& lhs,
+constexpr bool operator<(const duration<Rep1, Period1>& lhs,
     const duration<Rep2, Period2>& rhs);
 
 template <class Rep1, class Period1, class Rep2, class Period2>
-CONSTEXPR bool operator>=(const duration<Rep1, Period1>& lhs,
+constexpr bool operator>=(const duration<Rep1, Period1>& lhs,
     const duration<Rep2, Period2>& rhs);
 
 template <class Rep1, class Period1, class Rep2, class Period2>
-CONSTEXPR bool operator<=(const duration<Rep1, Period1>& lhs,
+constexpr bool operator<=(const duration<Rep1, Period1>& lhs,
     const duration<Rep2, Period2>& rhs);
 
 template <class Rep1, class Period1, class Rep2, class Period2>
-CONSTEXPR bool operator==(const duration<Rep1, Period1>& lhs,
+constexpr bool operator==(const duration<Rep1, Period1>& lhs,
     const duration<Rep2, Period2>& rhs);
 
 template< class C, class D1, class D2 >
-CONSTEXPR typename estd::common_type<D1,D2>::type
+constexpr typename estd::common_type<D1,D2>::type
 operator-( const time_point<C,D1>& pt_lhs,
     const time_point<C,D2>& pt_rhs );
 
 
+template <class Clock, class Dur1, class Dur2>
+constexpr bool operator<=(const time_point<Clock,Dur1>& lhs,
+    const time_point<Clock,Dur2>& rhs);
+
 template< class Clock, class Dur1, class Dur2 >
-CONSTEXPR bool operator>( const time_point<Clock,Dur1>& lhs,
+constexpr bool operator>( const time_point<Clock,Dur1>& lhs,
     const time_point<Clock,Dur2>& rhs );
 
 template< class Clock, class Dur1, class Dur2 >
-CONSTEXPR bool operator>=( const time_point<Clock,Dur1>& lhs,
+constexpr bool operator>=( const time_point<Clock,Dur1>& lhs,
     const time_point<Clock,Dur2>& rhs );
 
 template< class Clock, class Dur1, class Dur2 >
-CONSTEXPR bool operator==( const time_point<Clock,Dur1>& lhs,
+constexpr bool operator==( const time_point<Clock,Dur1>& lhs,
     const time_point<Clock,Dur2>& rhs );
 
 template< class Clock, class Dur1, class Dur2 >
-CONSTEXPR bool operator!=( const time_point<Clock,Dur1>& lhs,
+constexpr bool operator!=( const time_point<Clock,Dur1>& lhs,
     const time_point<Clock,Dur2>& rhs );
 
 

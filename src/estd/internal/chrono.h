@@ -10,11 +10,11 @@ namespace estd { namespace chrono {
 
 namespace internal {
 
-template <class TClock>
+template <class Clock>
 struct clock_traits
 {
     template <class T>
-    ESTD_CPP_CONSTEXPR_RET static T adjust_epoch(T t) { return t; }
+    constexpr static T adjust_epoch(T t) { return t; }
 };
 
 }
