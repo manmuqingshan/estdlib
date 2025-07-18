@@ -7,6 +7,8 @@
 #define FEATURE_ESTD_FROM_CHARS_OCTAL 1
 #endif
 
-#ifndef FEATURE_ESTD_GH134
-#define FEATURE_ESTD_GH134 1
+// When true, dogfood our own from_chars into stoi and friends.
+// When false, fall back on C library version
+#ifndef FEATURE_ESTD_FROM_CHARS_STOI
+#define FEATURE_ESTD_FROM_CHARS_STOI 1
 #endif

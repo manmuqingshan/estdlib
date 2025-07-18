@@ -42,7 +42,7 @@ Int stoi(
 
 }
 
-#if FEATURE_ESTD_GH134
+#if FEATURE_ESTD_FROM_CHARS_STOI
 template <ESTD_CPP_CONCEPT(concepts::v1::impl::String) Impl>
 ESTD_CPP_CONSTEXPR(14) long stol(
     const detail::basic_string<Impl>& str,

@@ -184,8 +184,7 @@ TEST_CASE("string_view")
 
         constexpr string_view s1("0x1234");
 
-        // Nearly there, we just need proper octal treatment
-#if FEATURE_ESTD_GH134
+#if FEATURE_ESTD_FROM_CHARS_STOI
         const int v = stoi(s1, nullptr, 16);
 
         REQUIRE(v == 0x1234);

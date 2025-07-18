@@ -68,7 +68,7 @@ public:
 
 }
 
-#if FEATURE_ESTD_GH134 == 0
+#if FEATURE_ESTD_FROM_CHARS_STOI == 0
 // FIX: This doesn't account for conversion errors, but should.  std version
 // throws exceptions
 // DEBT: Rework to use num_get/from_string - doing so will make it easier
