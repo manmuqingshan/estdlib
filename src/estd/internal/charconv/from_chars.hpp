@@ -58,7 +58,7 @@ ESTD_CPP_CONSTEXPR(14) detail::from_chars_result<CharIt> from_chars_integer(Char
 
     if(sto_mode && *current == '+')    ++current;
 
-    while(current != last)
+    while(current < last)
     {
         const optional_type digit = cbase_type::from_char(*current, base);
         if(digit.has_value())
@@ -70,7 +70,6 @@ ESTD_CPP_CONSTEXPR(14) detail::from_chars_result<CharIt> from_chars_integer(Char
                 if(base == 0 && current == first + 1 && local_value == 0)
                 {
                     base = 8;
-                    // Prep for octal or hex detection
                 }
             }
 #endif
@@ -108,17 +107,13 @@ ESTD_CPP_CONSTEXPR(14) detail::from_chars_result<CharIt> from_chars_integer(Char
                 }
             }
 
-            value = local_value;
-            return result_type{current, estd::errc(0)};
+            last = current;
         }
         ++current;
     }
 
-    // prepend with constexpr so we can optimize out non-signed flavors
-    if (estd::is_signed<T>::value && negate)
-        local_value = -local_value;
+    value = estd::is_signed<T>::value && negate ? -local_value : local_value;
 
-    value = local_value;
     return result_type{last,estd::errc(0)};
 }
 

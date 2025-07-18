@@ -10,8 +10,13 @@ namespace detail {
 template <typename CharIt>
 struct from_chars_result;
 
+template <class CharIt>
+struct to_chars_result;
+
+
 }
 
+// DEBT: This only works because someone else pulled in result.h - fix that
 using from_chars_result = detail::from_chars_result<const char*>;
 
 template <class Int, bool sto_mode = false>

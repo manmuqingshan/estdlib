@@ -709,6 +709,17 @@ TEST_CASE("string tests")
         }
         SECTION("internal::stoi")
         {
+            SECTION("octal")
+            {
+                estd::layer2::const_string s = "0100";
+                int value = estd::internal::stoi<int>(s, nullptr, 8);
+
+                REQUIRE(value == 0100);
+
+                value = estd::internal::stoi<int>(s, nullptr, 0);
+
+                REQUIRE(value == 0100);
+            }
             SECTION("hex")
             {
                 estd::layer2::const_string s = "0x100";

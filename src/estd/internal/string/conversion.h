@@ -5,6 +5,15 @@
 #include "../charconv/fwd.h"
 #include "../charconv/result.h"
 
+// DEBT: Clumsy suffix plurality, no corresponding estd/exceptions.h and dubious location
+#ifndef FEATURE_ESTD_EXCEPTIONS
+#define FEATURE_ESTD_EXCEPTIONS FEATURE_STD_EXCEPTION && __cpp_exceptions
+#endif
+
+#if FEATURE_ESTD_EXCEPTIONS
+#include <exception>
+#endif
+
 #ifndef FEATURE_ESTD_GH134
 #define FEATURE_ESTD_GH134 0
 #endif
@@ -21,6 +30,13 @@ Int stoi(
 
     const char_type* data = str.data();
     const from_chars_result r = estd::from_chars<Int, true>(data, data + str.size(), v, base);
+
+#if FEATURE_ESTD_EXCEPTIONS
+    if(r.ec == errc::invalid_argument)
+        throw std::invalid_argument("could not perform conversion");
+    else if(r.ec == errc::result_out_of_range)
+        throw std::out_of_range("overflow");
+#endif
 
     // Backchannel error status as '0' chars processed since we don't do exceptions
     if(pos)     *pos = r.ec == 0 ? (r.ptr - data) : 0;
