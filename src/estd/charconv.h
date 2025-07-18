@@ -68,7 +68,7 @@ ESTD_CPP_CONSTEXPR(14) enable_if_t<numeric_limits<Int>::is_integer, from_chars_r
         Int& value,
         const int base)
 {
-    if(base > 10)
+    if(base > 10 || (sto_mode && base == 0))
         return internal::from_chars_integer<36, sto_mode>(first, last, value, base);
     else
         return internal::from_chars_integer<10, sto_mode>(first, last, value, base);

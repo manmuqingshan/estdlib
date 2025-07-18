@@ -63,13 +63,17 @@ ESTD_CPP_CONSTEXPR(14) detail::from_chars_result<CharIt> from_chars_integer(Char
         const optional_type digit = cbase_type::from_char(*current, base);
         if(digit.has_value())
         {
+#if FEATURE_ESTD_STOI_OCTAL
             if ESTD_CPP_CONSTEXPR(17) (sto_mode)
             {
-                if(base == 0 && current == first && digit.value() == 0)
+                // Reach here when first character was '0' and base == 0 (autodeduce)
+                if(base == 0 && current == first + 1 && local_value == 0)
                 {
+                    base = 8;
                     // Prep for octal or hex detection
                 }
             }
+#endif
 
             bool success = raise_and_add(local_value, base, digit.value());
 
