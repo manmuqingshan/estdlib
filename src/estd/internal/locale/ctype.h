@@ -46,13 +46,8 @@ public:
 
     // These discrete helpers are not part of std
     static constexpr bool isspace(char_type ch) { return internal::ascii_isspace(ch); }
-
     static constexpr bool isupper(char_type ch) { return internal::ascii_isupper(ch); }
-
-    static constexpr bool islower(char_type ch)
-    {
-        return 'a' <= ch && ch <= 'a';
-    }
+    static constexpr bool islower(char_type ch) { return internal::ascii_islower(ch); }
 };
 
 // specialization, deviating from standard in that locale is compile-time

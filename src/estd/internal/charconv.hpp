@@ -25,6 +25,8 @@ ESTD_CPP_CONSTEXPR(14) estd::detail::from_chars_result<CharIt> from_chars_intege
     T& value,
     const unsigned short base = b)
 {
+    // DEBT: Hard wiring cbase to char & classic locale not bad, but something a little more
+    // resilient would be nice
     return internal::from_chars_integer<
         cbase<char, b, classic_locale_type>, sto_mode>(first, last, value, base);
 }

@@ -16,14 +16,23 @@
 
 namespace estd { namespace internal {
 
-// We need Cbase and runtime base, Cbase indicates whether we do alphanum or just num
+// We need Cbase and runtime base, Cbase indicates whether we do alphanum or just num,
+// while 'base' itself is actual calculated base
+// DEBT: Either remove constexpr indication here, or rework to return a pair.  Not doing
+// latter because it may impact non-constexpr optimization
+// DEBT: Look into whether a constexpr/'base' helper is a worthwhile optimization
 template<class Cbase, bool sto_mode = false, class T, class CharIt>
 ESTD_CPP_CONSTEXPR(14) detail::from_chars_result<CharIt> from_chars_integer(CharIt first, CharIt last,
     T& value,
-    unsigned short base = Cbase::base())
+    unsigned short base)
 {
     using cbase_type = Cbase;
+    using char_type = typename cbase_type::char_type;
     using optional_type =  typename cbase_type::optional_type;
+    using locale_type = typename cbase_type::locale_type;
+    // DEBT: Grabbing char_type from cbase OK, but not perfect (probably want to deduce it
+    // from locale/encoding instead)
+    using ctype_type = estd::ctype<char_type, locale_type>;
     using result_type = detail::from_chars_result<CharIt>;
 
     // DEBT: Expand this to allow any numeric type, we'll have to make specialized
@@ -44,7 +53,7 @@ ESTD_CPP_CONSTEXPR(14) detail::from_chars_result<CharIt> from_chars_integer(Char
 
     // "leading whitespace is not ignored" [1]
     // Only eat whitespace in sto mode
-    while(sto_mode && estd::internal::ascii_isspace(*current))
+    while(sto_mode && ctype_type::isspace(*current))
         ++current;
 
     // NOTE: A little odd, https://en.cppreference.com/w/cpp/string/byte/strtoul.html

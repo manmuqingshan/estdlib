@@ -3,12 +3,19 @@
 namespace estd { namespace internal {
 
 template <class Char>
-inline constexpr bool ascii_isupper(Char ch)
+constexpr bool ascii_isupper(Char ch)
 {
     return 'A' <= ch && ch <= 'Z';
 }
 
-inline constexpr int ascii_isdigit(int ch)
+template <class Char>
+constexpr bool ascii_islower(Char ch)
+{
+    return 'a' <= ch && ch <= 'z';
+}
+
+template <class Char>
+constexpr int ascii_isdigit(Char ch)
 {
     return '0' <= ch && ch <= '9';
 }
