@@ -24,6 +24,8 @@ Int stoi(
     Int v;
     using char_type = typename Impl::policy_type::char_traits::char_type;
 
+    // DEBT: We'd like an optimization for (the frequent) null terminated string case to
+    // avoid underlying strlen
     const char_type* data = str.data();
     const from_chars_result r = estd::from_chars<Int, true>(data, data + str.size(), v, base);
 
@@ -32,10 +34,12 @@ Int stoi(
         throw std::invalid_argument("could not perform conversion");
     else if(r.ec == errc::result_out_of_range)
         throw std::out_of_range("overflow");
-#endif
 
+    if(pos)     *pos = r.ptr - data;
+#else
     // Backchannel error status as '0' chars processed since we don't do exceptions
     if(pos)     *pos = r.ec == 0 ? (r.ptr - data) : 0;
+#endif
 
     return v;
 }
