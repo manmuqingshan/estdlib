@@ -118,13 +118,21 @@ void sleep_for( const chrono::duration<Rep, Period>& sleep_duration )
 #ifdef INCLUDE_vTaskDelayUntil
 #endif
 
-// compiles, but untested
-template< class Clock, class Duration >
-void sleep_until( const chrono::time_point<Clock,Duration>& sleep_time )
-{
-    chrono::freertos_clock::rep count = sleep_time - chrono::freertos_clock::now();
+#ifndef FEATURE_ESTD_THREAD_STRICT_SLEEP_UNTIL
+#define FEATURE_ESTD_THREAD_STRICT_SLEEP_UNTIL 1
+#endif
 
-    vTaskDelay(count);
+// Lightly tested
+template <class Clock, class Duration>
+void sleep_until(const chrono::time_point<Clock,Duration>& sleep_time)
+{
+#if FEATURE_ESTD_THREAD_STRICT_SLEEP_UNTIL
+    static_assert(is_same<Clock, chrono::freertos_clock>::value, "Clock must be freertos_clock");
+#endif
+
+    chrono::freertos_clock::duration delta = sleep_time - chrono::freertos_clock::now();
+
+    vTaskDelay(delta.count());
 }
 
 inline void yield() { taskYIELD(); }

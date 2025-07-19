@@ -5,6 +5,7 @@
 #include "unit-test.h"
 
 #include <estd/chrono.h>
+#include <estd/thread.h>
 
 #if ESP_PLATFORM
 #include <esp_log.h>
@@ -103,7 +104,13 @@ static void test_estd_system_clock()
 #ifdef ESTD_OS_FREERTOS
 static void test_freertos_clock()
 {
-    test_clock<estd::chrono::freertos_clock>();
+    using namespace estd;
+
+    using clock = chrono::freertos_clock;
+
+    test_clock<clock>();
+
+    this_thread::sleep_until(clock::now() + chrono::milliseconds(0));
 }
 #endif
 
