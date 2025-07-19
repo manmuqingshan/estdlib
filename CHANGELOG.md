@@ -2,10 +2,15 @@
 
 ## Added Features
 
-* https://github.com/malachi-iot/estdlib/issues/133 TBD UNDERWAY
+* https://github.com/malachi-iot/estdlib/issues/133 improved string_view constexpr support 
+* https://github.com/malachi-iot/estdlib/issues/136 added missing <= and max() to `time_point`
 
 ## Quality Updates & Bug Fixes
 
+* https://github.com/malachi-iot/estdlib/issues/134 `stoi` and friends now internally use
+  `from_chars`.  This implicitly addresses https://github.com/malachi-iot/estdlib/issues/123
+  making `stoi` compatible also with `string_view`
+* https://github.com/malachi-iot/estdlib/issues/136 FreeRTOS flavor of `this_thread::sleep_until` now compiles and passes tests
 * `ESTD_FLAGS` now works better in non-constexpr situations
 
 # v0.8.8 - 09JUL25
