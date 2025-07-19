@@ -22,9 +22,9 @@ struct seconds_tag {};
 template <class Rep>
 struct duration_values
 {
-    static ESTD_CPP_CONSTEXPR_RET Rep zero() { return Rep(0); }
-    static ESTD_CPP_CONSTEXPR_RET Rep min() { return estd::numeric_limits<Rep>::min(); }
-    static ESTD_CPP_CONSTEXPR_RET Rep max() { return estd::numeric_limits<Rep>::max(); }
+    static ESTD_CPP_CONSTEVAL Rep zero() { return Rep(0); }
+    static ESTD_CPP_CONSTEVAL Rep min() { return estd::numeric_limits<Rep>::min(); }
+    static ESTD_CPP_CONSTEVAL Rep max() { return estd::numeric_limits<Rep>::max(); }
 };
 
 }
@@ -47,8 +47,8 @@ protected:
     using duration_values = internal::duration_values<Rep>;
 
 public:
-    typedef Rep rep;
-    typedef typename Period::type period;
+    using rep = Rep;
+    using period = typename Period::type;
 
     constexpr duration() = default;
 
@@ -96,20 +96,18 @@ public:
         return *this;
     }
 
-    ESTD_CPP_CONSTEXPR_RET duration operator-() const
+    constexpr duration operator-() const
     {
-#ifdef FEATURE_CPP_STATIC_ASSERT
         static_assert (numeric_limits<rep>::is_signed, "operator -() requires a signed Rep type");
-#endif
 
         return duration(-base_type::rep_);
     }
 
-    ESTD_CPP_CONSTEXPR_RET duration operator+() const { return *this; }
+    constexpr duration operator+() const { return *this; }
 
-    static ESTD_CPP_CONSTEXPR_RET duration min() { return duration(duration_values::min()); }
-    static ESTD_CPP_CONSTEXPR_RET duration max() { return duration(duration_values::max()); }
-    static ESTD_CPP_CONSTEXPR_RET duration zero() { return duration(duration_values::zero()); }
+    static ESTD_CPP_CONSTEVAL duration min() { return duration(duration_values::min()); }
+    static ESTD_CPP_CONSTEVAL duration max() { return duration(duration_values::max()); }
+    static ESTD_CPP_CONSTEVAL duration zero() { return duration(duration_values::zero()); }
 };
 #endif
 

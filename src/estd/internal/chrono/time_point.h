@@ -38,19 +38,13 @@ public:
 // mean 0 i.e. the starting point from which the clock begins - unix epoch is around 1970,
 // and the seconds count up from there so 0 = 1970.  The inspecific nature of things
 // implies there's a way to reach into Clock itself and grab this epoch
-#ifdef FEATURE_CPP_CONSTEXPR
-    constexpr
-#endif
-        time_point() : m_time_since_epoch(0) {}
+    constexpr time_point() : m_time_since_epoch(0) {}
 
-#ifdef FEATURE_CPP_CONSTEXPR
-    constexpr
-#endif
-        explicit time_point(const Duration& duration) : m_time_since_epoch(duration) {}
+    constexpr explicit time_point(const Duration& duration) : m_time_since_epoch(duration) {}
 
     // NOTE: Compiles, but not tested
-    template <class TDuration2>
-    time_point(const time_point<Clock, TDuration2>& t) :
+    template <class Duration2>
+    constexpr time_point(const time_point<Clock, Duration2>& t) :
         m_time_since_epoch(t.time_since_epoch())
     {}
 
@@ -81,8 +75,7 @@ public:
     {}
 #endif
 
-    Duration time_since_epoch() const { return m_time_since_epoch; }
-
+    constexpr Duration time_since_epoch() const { return m_time_since_epoch; }
 
     //constexpr
     time_point& operator+=( const duration& d )
@@ -113,9 +106,14 @@ public:
         return copied;
     }
 
-    static inline CONSTEXPR time_point min() NOEXCEPT
+    static ESTD_CPP_CONSTEVAL time_point min() noexcept
     {
         return time_point(duration::min());
+    }
+
+    static ESTD_CPP_CONSTEVAL time_point max() noexcept
+    {
+        return time_point(duration::max());
     }
 };
 #endif

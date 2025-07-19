@@ -203,10 +203,15 @@ TEST_CASE("chrono tests")
     }
     SECTION("duration values")
     {
+        using namespace estd;
+
         REQUIRE(estd::chrono::internal::duration_values<int>::max() == estd::numeric_limits<int>::max());
         REQUIRE(estd::chrono::internal::duration_values<int16_t>::max() == estd::numeric_limits<int16_t>::max());
 
-        REQUIRE(estd::chrono::duration<int>::min().count() == estd::numeric_limits<int>::min());
+        REQUIRE(chrono::duration<int>::min().count() == numeric_limits<int>::min());
+        REQUIRE(chrono::duration<int>::max().count() == numeric_limits<int>::max());
+        REQUIRE(fake_clock::time_point::min().time_since_epoch() == fake_clock::duration::min());
+        REQUIRE(fake_clock::time_point::max().time_since_epoch() == fake_clock::duration::max());
     }
     SECTION("comparisons")
     {
