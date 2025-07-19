@@ -42,7 +42,8 @@ TEST_CASE("chrono tests")
 
     SECTION("default time_point")
     {
-        fake_clock::time_point default_time_point;
+        using time_point = fake_clock::time_point;
+        time_point default_time_point;
         fake_clock::duration epoch = default_time_point.time_since_epoch();
 
         REQUIRE(epoch.count() == 0);
@@ -202,8 +203,8 @@ TEST_CASE("chrono tests")
     }
     SECTION("duration values")
     {
-        REQUIRE(estd::chrono::duration_values<int>::max() == estd::numeric_limits<int>::max());
-        REQUIRE(estd::chrono::duration_values<int16_t>::max() == estd::numeric_limits<int16_t>::max());
+        REQUIRE(estd::chrono::internal::duration_values<int>::max() == estd::numeric_limits<int>::max());
+        REQUIRE(estd::chrono::internal::duration_values<int16_t>::max() == estd::numeric_limits<int16_t>::max());
 
         REQUIRE(estd::chrono::duration<int>::min().count() == estd::numeric_limits<int>::min());
     }

@@ -19,8 +19,6 @@ namespace internal {
 
 struct seconds_tag {};
 
-}
-
 template <class Rep>
 struct duration_values
 {
@@ -28,6 +26,8 @@ struct duration_values
     static ESTD_CPP_CONSTEXPR_RET Rep min() { return estd::numeric_limits<Rep>::min(); }
     static ESTD_CPP_CONSTEXPR_RET Rep max() { return estd::numeric_limits<Rep>::max(); }
 };
+
+}
 
 template<class Rep, class Period>
 class duration :
@@ -43,6 +43,8 @@ protected:
     template <class Rep2, class Period2>
     static ESTD_CPP_CONSTEXPR_RET Rep convert_from(const std::chrono::duration<Rep2, Period2>& d);
 #endif
+
+    using duration_values = internal::duration_values<Rep>;
 
 public:
     typedef Rep rep;
@@ -105,9 +107,9 @@ public:
 
     ESTD_CPP_CONSTEXPR_RET duration operator+() const { return *this; }
 
-    static ESTD_CPP_CONSTEXPR_RET duration min() { return duration(duration_values<rep>::min()); }
-    static ESTD_CPP_CONSTEXPR_RET duration max() { return duration(duration_values<rep>::max()); }
-    static ESTD_CPP_CONSTEXPR_RET duration zero() { return duration(duration_values<rep>::zero()); }
+    static ESTD_CPP_CONSTEXPR_RET duration min() { return duration(duration_values::min()); }
+    static ESTD_CPP_CONSTEXPR_RET duration max() { return duration(duration_values::max()); }
+    static ESTD_CPP_CONSTEXPR_RET duration zero() { return duration(duration_values::zero()); }
 };
 #endif
 
