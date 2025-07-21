@@ -2,8 +2,8 @@
 
 ## Added Features
 
-* https://github.com/malachi-iot/estdlib/issues/133 improved string_view constexpr support 
-* https://github.com/malachi-iot/estdlib/issues/136 added missing <= and max() to `time_point`
+* https://github.com/malachi-iot/estdlib/issues/133 improved `string_view` constexpr support 
+* https://github.com/malachi-iot/estdlib/issues/136 added missing <= and `max()` to `time_point`
 
 ## Quality Updates & Bug Fixes
 

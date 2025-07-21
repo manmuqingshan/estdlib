@@ -4,16 +4,18 @@
 
 namespace estd { namespace detail { namespace impl {
 
-// NOTE: Can't activate fn_options unless we also revise v2::function signature,
-// which means virtual, fnptr1 and fnptr2 must all match
 enum fn_options
 {
-    FN_NONE2,
-    FN_COPY,
-    FN_MOVE,
-    FN_DTOR,
+    FN_NONE,
 
-    FN_DEFAULT = FN_NONE2,
+    FN_COPY,            // fn(const fn&)
+    FN_MOVE,            // fn(fn&&)
+    FN_DTOR,            // ~fn
+    FN_AUTO_DTOR,       // ~fn *always* after execution (opt mode)
+
+    // TODO: Consider fnptr1, fnptr2 and virtual specifiers here too
+
+    FN_DEFAULT = FN_NONE,
 };
 
 ESTD_FLAGS(fn_options)
@@ -33,6 +35,10 @@ struct function_fnptr2_opt;
 template <typename F, fn_options = FN_DEFAULT>
 struct function_virtual;
 
+// 21JUL25 MB In progress, coming along:
+// 1. fnptr1 no #135 implementation
+// 2. fnptr2 #135 implementation, needs testing and refinement
+// 3. virtual #135 implementation, needs testing
 #ifndef FEATURE_ESTD_GH135
 #define FEATURE_ESTD_GH135 1
 #endif
