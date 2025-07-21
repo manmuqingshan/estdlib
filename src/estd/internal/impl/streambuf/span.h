@@ -28,7 +28,7 @@ struct out_span_streambuf :
     typedef typename base_out_type::pos_type pos_type;
     typedef typename traits_type::int_type int_type;
 
-    span_type& out() { return base_type::value(); }
+    ESTD_CPP_CONSTEXPR(14) span_type& out() { return base_type::value(); }
     constexpr const span_type& out() const { return base_type::value(); }
 
     // NOTE: Would use Extent here but that breaks it for scenarios
@@ -47,13 +47,13 @@ struct out_span_streambuf :
 
     }
 
-    char_type* pbase() const
+    ESTD_CPP_CONSTEXPR(14) char_type* pbase() const
     {
         return const_cast<char_type*>(out().data());
     }
 
-    char_type* pptr() const { return pbase() + base_out_type::pos(); }
-    char_type* epptr() const { return pbase() + out().size_bytes(); }
+    ESTD_CPP_CONSTEXPR(14) char_type* pptr() const { return pbase() + base_out_type::pos(); }
+    ESTD_CPP_CONSTEXPR(14) char_type* epptr() const { return pbase() + out().size_bytes(); }
 
     streamsize xsputn(const char_type* s, streamsize count)
     {
@@ -128,6 +128,8 @@ struct in_span_streambuf :
     typedef in_pos_streambuf_base<CharTraits> base_pos_type;
 
     using typename base_pos_type::traits_type;
+    using base_pos_type::pos;
+
     using char_type = typename traits_type::char_type;
     typedef typename base_type::value_type span_type;
     typedef typename span_type::size_type size_type;
@@ -135,13 +137,22 @@ struct in_span_streambuf :
     typedef typename base_pos_type::pos_type pos_type;
     typedef typename remove_const<char_type>::type nonconst_char_type;
 
+#if FEATURE_ESTD_STREAMBUF_POLICY
+    struct policy : base_type::policy
+    {
+        using rfc = internal::rfc::rfc2119;
+
+        struct use : base_type::policy::use
+        {
+            static constexpr rfc gptr = rfc::should;
+            static constexpr rfc seekoff = rfc::may;
+            static constexpr rfc seekpos = rfc::may;
+        };
+    };
+#endif
+
 protected:
     constexpr const span_type& in() const { return base_type::value(); }
-
-    constexpr const pos_type& pos() const
-    {
-        return base_pos_type::pos();
-    }
 
 public:
     template <class ...Args>
@@ -172,7 +183,7 @@ protected:
         return c;
     }
 
-    ESTD_CPP_CONSTEXPR_RET const char_type& xsgetc() const { return *gptr(); }
+    constexpr const char_type& xsgetc() const { return *gptr(); }
 };
 
 // EXPERIMENTAL
