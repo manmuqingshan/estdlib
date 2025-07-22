@@ -133,7 +133,7 @@ public:
     typedef T element_type;
     typedef typename estd::remove_cv<T>::type value_type;
 
-    ESTD_CPP_CONSTEXPR_RET index_type size_bytes() const
+    constexpr index_type size_bytes() const
     { return size() * sizeof(element_type); }
 
     constexpr bool empty() const NOEXCEPT
@@ -187,11 +187,11 @@ public:
     // most definitely a 'shallow clone'
     // utilizing 'base_type' enables clever init constructors of compatible base to
     // widen field of how this span can initialize
-    ESTD_CPP_CONSTEXPR_RET span(const base_type& copy_from) : base_type(copy_from) {}
+    constexpr span(const base_type& copy_from) : base_type(copy_from) {}
     // DEBT: This extra constructor is needed to quiet down deprecation warnings
     // about implicitly defined constructor - apparently above base_type flavor
     // doesn't fill all the roles
-    ESTD_CPP_CONSTEXPR_RET span(const span& copy_from) : base_type(copy_from) {}
+    constexpr span(const span& copy_from) : base_type(copy_from) {}
 
     span& operator=(const span& copy_from)
     {

@@ -6,6 +6,7 @@
 #include "../../span.h" // for span streambuf
 #include "streambuf/bipbuf.h"
 #include "streambuf/buffer.h"
+#include "streambuf/span.h"
 
 namespace estd { namespace internal { namespace impl {
 
@@ -80,5 +81,3 @@ public:
 };
 
 }}}
-
-#include "streambuf/span.h"

@@ -188,7 +188,7 @@ protected:
 
 // EXPERIMENTAL
 // Works-ish, but no use case identified
-#if __cpp_deduction_guides
+#if __cpp_deduction_guides && UNUSED
 template <class CharTraits, size_t Extent>
 in_span_streambuf(estd::span<typename CharTraits::char_type, Extent>) ->
     in_span_streambuf<CharTraits, Extent>;
