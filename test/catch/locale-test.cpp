@@ -533,6 +533,16 @@ TEST_CASE("locale")
 
                     REQUIRE(f.is(ctype_base::upper, 'a') == false);
                     REQUIRE(f.is(ctype_base::upper | ctype_base::lower | ctype_base::xdigit, 'A') == true);
+
+                    REQUIRE(f.toupper('a') == 'A');
+                    REQUIRE(f.toupper('A') == 'A');
+                    REQUIRE(f.toupper('}') == '}');
+                    REQUIRE(f.toupper(']') == ']');
+
+                    REQUIRE(f.tolower('a') == 'a');
+                    REQUIRE(f.tolower('A') == 'a');
+                    REQUIRE(f.tolower('}') == '}');
+                    REQUIRE(f.tolower(']') == ']');
                 }
             }
             SECTION("num_get")

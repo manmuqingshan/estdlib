@@ -15,12 +15,27 @@ constexpr bool ascii_islower(Char ch)
 }
 
 template <class Char>
-constexpr int ascii_isdigit(Char ch)
+constexpr bool ascii_isdigit(Char ch)
 {
     return '0' <= ch && ch <= '9';
 }
 
+// Presumes incoming value is a letter (upper or lower)
+template <class Char>
+constexpr Char ascii_toupper(Char ch)
+{
+    return ch & ~0x20;
+}
+
+// Presumes incoming value is a letter (upper or lower)
+template <class Char>
+constexpr Char ascii_tolower(Char ch)
+{
+    return ch | 0x20;
+}
+
 // As per http://en.cppreference.com/w/cpp/string/byte/isspace
+// *Probably* resilient to non-ASCII environments
 template <class Char>
 ESTD_CPP_CONSTEXPR(14) bool ascii_isspace(Char ch)
 {
