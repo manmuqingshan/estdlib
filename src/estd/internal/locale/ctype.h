@@ -107,7 +107,7 @@ template <class Locale>
 class ctype<wchar_t, Locale> : public ctype_base
 {
 public:
-    static ESTD_CPP_CONSTEXPR_RET wchar_t widen(char ch) { return ch; }
+    static constexpr wchar_t widen(char ch) { return ch; }
 };
 
 

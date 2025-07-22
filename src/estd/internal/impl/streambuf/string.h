@@ -1,6 +1,7 @@
 #pragma once
 
 #include "base.h"
+#include "pos.h"
 
 // Since strings always have an "out" component (track how many characters are written to
 // it) we don't have a distinct "in" string buf.

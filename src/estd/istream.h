@@ -85,21 +85,25 @@ inline basic_istream<char>& operator >>(basic_istream<char>& in, short& value)
  * @param __os
  * @return
  *
- * Compiles but not runtime tested
  */
-template <class TStreambuf, class TBase>
-inline detail::basic_istream<TStreambuf, TBase>& ws(
-    detail::basic_istream<TStreambuf, TBase>& __is)
+template <class Streambuf, class Base>
+inline detail::basic_istream<Streambuf, Base>& ws(
+    detail::basic_istream<Streambuf, Base>& __is)
 {
-    typedef typename detail::basic_istream<TStreambuf>::locale_type locale_type;
+    using locale_type = typename detail::basic_istream<Streambuf>::locale_type;
+    using streambuf_type = remove_reference_t<Streambuf>;
+    using traits = typename streambuf_type::traits_type;
+    using ct = estd::ctype<estd::remove_const_t<typename traits::char_type>, locale_type>;
 
-    locale_type loc = __is.getloc();
+    //locale_type loc = __is.getloc();
 
     // isspace will automatically fall out if it's an EOF (or nodata)
     for(;;)
     {
-        int ch = __is.peek();
-        if(isspace((char)ch, loc))
+        const typename traits::int_type ch = __is.peek();
+        // This works and is the 'std' way, but ours custom way is a little quicker
+        //if(isspace((char_type)ch, loc))
+        if(ct::isspace(traits::to_char_type(ch)))
         {
             __is.ignore();
         }

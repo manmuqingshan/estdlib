@@ -77,7 +77,7 @@ struct in_pos_streambuf_base : pos_streambuf_base<CharTraits, Index>
     constexpr explicit in_pos_streambuf_base(const index_type& pos = 0) : base_type(pos) {}
 
 protected:
-    void gbump(int count) { this->pos_ += count; }
+    ESTD_CPP_CONSTEXPR(14) void gbump(int count) { this->pos_ += count; }
 
     inline pos_type seekoff(off_type off, ios_base::seekdir way,
                             ios_base::openmode which = ios_base::in | ios_base::out)
@@ -96,15 +96,15 @@ struct out_pos_streambuf_base : pos_streambuf_base<CharTraits, Index>
 {
     using base_type = pos_streambuf_base<CharTraits, Index>;
     using typename base_type::traits_type;
-    typedef typename base_type::pos_type pos_type;
-    typedef typename base_type::off_type off_type;
-    typedef typename base_type::index_type index_type;
+    using typename base_type::pos_type;
+    using typename base_type::off_type;
+    using typename base_type::index_type;
 
     constexpr explicit out_pos_streambuf_base(index_type&& pos) : base_type(std::move(pos)) {}
     constexpr explicit out_pos_streambuf_base(const index_type& pos = 0) : base_type(pos) {}
 
 protected:
-    void pbump(int count) { this->pos_ += count; }
+    ESTD_CPP_CONSTEXPR(14) void pbump(int count) { this->pos_ += count; }
 
     inline pos_type seekoff(off_type off, ios_base::seekdir way,
                             ios_base::openmode which = ios_base::in | ios_base::out)
