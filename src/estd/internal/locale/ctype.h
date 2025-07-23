@@ -45,18 +45,18 @@ public:
     static constexpr bool isupper(char_type ch) { return internal::ascii_isupper(ch); }
     static constexpr bool islower(char_type ch) { return internal::ascii_islower(ch); }
 
-    static ESTD_CPP_CONSTEXPR(14) char_type toupper(char_type ch)
+    static constexpr char_type toupper(char_type ch)
     {
-        const char_type upper = internal::ascii_toupper(ch);
-        // call to is_upper catches non-letters and falls back to ch
-        return internal::ascii_isupper(upper) ? upper : ch;
+        return internal::ascii_islower(ch) ?
+            internal::ascii_toupper(ch) :
+            ch;
     }
 
-    static ESTD_CPP_CONSTEXPR(14) char_type tolower(char_type ch)
+    static constexpr char_type tolower(char_type ch)
     {
-        const char_type lower = internal::ascii_tolower(ch);
-        // call to is_lower catches non-letters and falls back to ch
-        return internal::ascii_islower(lower) ? lower : ch;
+        return internal::ascii_isupper(ch) ?
+            internal::ascii_tolower(ch) :
+            ch;
     }
 };
 

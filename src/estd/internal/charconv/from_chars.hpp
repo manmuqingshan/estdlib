@@ -33,7 +33,7 @@ ESTD_CPP_CONSTEXPR(14) detail::from_chars_result<CharIt> from_chars_integer(Char
     static_assert(is_integral<T>::value, "T must be integral type");
 
     CharIt current = first;
-    bool negate;
+    bool negate{};          // <= c++17 needs this initialized for constexpr
     // "If no characters match the pattern or if the value obtained by parsing
     // the matched characters is not representable in the type of value, value is unmodified," [1]
     T local_value = 0;
