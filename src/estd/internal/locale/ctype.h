@@ -48,12 +48,14 @@ public:
     static ESTD_CPP_CONSTEXPR(14) char_type toupper(char_type ch)
     {
         const char_type upper = internal::ascii_toupper(ch);
+        // call to is_upper catches non-letters and falls back to ch
         return internal::ascii_isupper(upper) ? upper : ch;
     }
 
     static ESTD_CPP_CONSTEXPR(14) char_type tolower(char_type ch)
     {
         const char_type lower = internal::ascii_tolower(ch);
+        // call to is_lower catches non-letters and falls back to ch
         return internal::ascii_islower(lower) ? lower : ch;
     }
 };
