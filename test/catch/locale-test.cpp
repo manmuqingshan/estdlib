@@ -529,6 +529,7 @@ TEST_CASE("locale")
             {
                 SECTION("char")
                 {
+                    layer1::string<32> s1{test::str_hello};
                     auto f = use_facet<ctype<char>>(l);
 
                     REQUIRE(f.is(ctype_base::upper, 'a') == false);
@@ -543,6 +544,12 @@ TEST_CASE("locale")
                     REQUIRE(f.tolower('A') == 'a');
                     REQUIRE(f.tolower('}') == '}');
                     REQUIRE(f.tolower(']') == ']');
+
+                    // Due to https://github.com/malachi-iot/estdlib/issues/137 we can't
+                    // comfortably use begin() and end()
+                    f.toupper(s1.data(), s1.data() + s1.size());
+
+                    REQUIRE(s1 == "HELLO WORLD");
                 }
             }
             SECTION("num_get")

@@ -8,12 +8,8 @@
  */
 #pragma once
 
-#include "fwd.h"
-#include "facet.h"
-
-#include "../raise_and_add.h"
-
 #include "cbase.h"
+#include "facet.h"
 
 namespace estd {
 
@@ -121,7 +117,26 @@ public:
 
 
 template <class Char, class Locale>
-class ctype : public internal::ctype<Char, Locale> {};
+class ctype : public internal::ctype<Char, Locale>
+{
+    using base_type = internal::ctype<Char, Locale>;
+
+public:
+    using base_type::tolower;
+    using base_type::toupper;
+
+    static ESTD_CPP_CONSTEXPR(14) Char* toupper(Char* beg, Char* end)
+    {
+        for(;beg != end; ++beg)   *beg = toupper(*beg);
+        return beg;
+    }
+
+    static ESTD_CPP_CONSTEXPR(14) Char* tolower(Char* beg, Char* end)
+    {
+        for(;beg != end; ++beg)   *beg = toupper(*beg);
+        return beg;
+    }
+};
 
 namespace internal {
 
