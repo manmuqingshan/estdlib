@@ -12,9 +12,7 @@ struct locking_accessor
     typedef Impl impl_type;
     typedef locking_accessor this_type;
 
-    typedef typename impl_type::value_type value_type;
-    typedef value_type& reference;
-    typedef const value_type& const_reference;
+    ESTD_CPP_STD_VALUE_TYPE(typename impl_type::value_type)
 
     // This is type for moving pointer/handle around (for iterator use)
     typedef typename impl_type::offset_type offset_type;
