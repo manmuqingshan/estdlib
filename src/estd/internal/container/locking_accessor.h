@@ -34,15 +34,17 @@ public:
     ESTD_CPP_CONSTEXPR(17) offset_type h_exp() { return impl_.offset(); }
     constexpr const_offset_type h_exp() const { return impl_.offset(); }
 
-    ESTD_CPP_CONSTEXPR(17) locked_type lock() { return impl_.lock(); }
+    ESTD_CPP_CONSTEXPR(14) locked_type lock() { return impl_.lock(); }
     constexpr const_locked_type clock() const { return impl_.lock(); }
     ESTD_CPP_CONSTEXPR(14) void unlock() { return impl_.unlock(); }
     ESTD_CPP_CONSTEXPR(14) void cunlock() const { return impl_.unlock(); }
 
+    // Remember, we are an accessor not an iterator, so 'reference' is appropriate
+    // here rather than 'pointer'
     // DEBT: Needs filtering
     // DEBT: Leaves unlocked!
-    reference operator->() { return lock(); }
-    const_reference operator->() const { return clock(); }
+    ESTD_CPP_CONSTEXPR(14) reference operator->() { return lock(); }
+    ESTD_CPP_CONSTEXPR(14) const_reference operator->() const { return clock(); }
 
     // DEBT: Leaves unlocked!
     operator locked_type() { return lock(); }

@@ -22,6 +22,8 @@ namespace estd {
 
 namespace internal {
 
+// 24JUL25 MB - hopefully these options can help us judiciously choose when to go
+// full API mode on locking ala https://github.com/malachi-iot/estdlib/issues/137
 // Not ready yet
 enum class allocator_options
 {
@@ -35,6 +37,10 @@ enum class allocator_options
     /// locks don't always provide entire range
     noncontiguous   = 0x08,
     /// all allocators provide locking API, this indicates whether one MUST or MAY use that API.
+    /// FIX: We need an RFC here really - we need a MUST, MAY or MUST NOT:
+    /// MUST = true blue locking
+    /// MAY = emulated locking
+    /// MUST NOT = no locking API, regular iterator/accessor
     locking         = 0x10,
     /// Is allocator's size a compile time constant (i.e. layer3 this is false)
     const_size      = 0x20,
