@@ -72,8 +72,10 @@
 #define ESTD_MCU_ESPRESSIF
 
 #if defined(IDF_VER)    // native esp-idf rtos sdk sets this
+#define ESTD_OS_TYPE ESTD_RTOS_TYPE_FREERTOS
 #include "arch/esp-idf.h"
 #elif defined(ESP32)    // platformio does not set IDV_VER, but does set this
+#define ESTD_OS_TYPE ESTD_RTOS_TYPE_FREERTOS
 #include "arch/esp-idf.h"
 #endif
 

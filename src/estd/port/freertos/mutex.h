@@ -32,6 +32,30 @@ public:
 
 };
 
+// UNTESTED
+// TODO: Add an ESTD_FLAG to denote capabilities
+class isr_mutex_base : public semaphore_base
+{
+protected:
+    constexpr isr_mutex_base(SemaphoreHandle_t s) :
+        semaphore_base(s) {}
+
+public:
+    // No blocking flavor here
+    //void lock()
+
+    bool try_lock() const
+    {
+        return s.take_from_isr() == pdTRUE;
+    }
+
+    bool unlock() const
+    {
+        return s.give_from_isr() == pdTRUE;
+    }
+
+};
+
 
 class recursive_mutex_base : public semaphore_base
 {

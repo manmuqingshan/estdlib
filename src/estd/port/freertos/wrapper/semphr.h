@@ -27,7 +27,7 @@ public:
     struct mutex_tag {};
 
     semaphore() = default;
-    semaphore(SemaphoreHandle_t s) :
+    constexpr semaphore(SemaphoreHandle_t s) :
         s{s} {}
 
     inline static SemaphoreHandle_t create(binary_tag)
@@ -119,7 +119,7 @@ public:
         return xSemaphoreGiveRecursive(s);
     }
 
-    BaseType_t give_from_isr(BaseType_t* higherPriorityTaskWoken) const
+    BaseType_t give_from_isr(BaseType_t* higherPriorityTaskWoken = nullptr) const
     {
         return xSemaphoreGiveFromISR(s, higherPriorityTaskWoken);
     }
@@ -134,7 +134,7 @@ public:
         return xSemaphoreTakeRecursive(s, ticksToWait);
     }
 
-    BaseType_t take_from_isr(BaseType_t* higherPriorityTaskWoken) const
+    BaseType_t take_from_isr(BaseType_t* higherPriorityTaskWoken = nullptr) const
     {
         return xSemaphoreTakeFromISR(s, higherPriorityTaskWoken);
     }
