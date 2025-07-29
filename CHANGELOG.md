@@ -12,6 +12,7 @@
   making `stoi` compatible also with `string_view`
 * https://github.com/malachi-iot/estdlib/issues/136 FreeRTOS flavor of `this_thread::sleep_until` now compiles and passes tests
 * `ESTD_FLAGS` now works better in non-constexpr situations
+* `make_heap` now noops on empty range, `prority_queue::erase_if` doesn't crash on 1-element containers
 
 # v0.8.8 - 09JUL25
 

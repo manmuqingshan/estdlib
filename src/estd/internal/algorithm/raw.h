@@ -27,20 +27,14 @@ const T& min(const T& a, const T& b, Compare comp)
 }
 
 template <class T>
-#if __cpp_constexpr >= 201304L
-constexpr
-#endif
-const T& max(const T& a, const T& b)
+ESTD_CPP_CONSTEXPR(14) const T& max(const T& a, const T& b)
 {
     return (b > a) ? b : a;
 }
 
 
 template<class ForwardIt, class Compare>
-#if __cpp_constexpr >= 201304L
-constexpr
-#endif
-ForwardIt max_element(ForwardIt first, ForwardIt last, Compare comp)
+ESTD_CPP_CONSTEXPR(14) ForwardIt max_element(ForwardIt first, ForwardIt last, Compare comp)
 {
     if (first == last)
         return last;

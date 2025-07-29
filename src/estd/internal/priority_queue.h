@@ -129,7 +129,6 @@ public:
     }
 
 
-#if __cpp_rvalue_references && __cpp_variadic_templates
     template <class ...Args>
     accessor emplace(Args&&...args)
     {
@@ -154,7 +153,6 @@ public:
         push_heap();
         return c.back();
     }
-#endif
 
     // EXPERIMENTAL
     container_type& container() { return c; }
@@ -164,6 +162,12 @@ public:
     // DEBT: Not optimized, but passes tests
     void erase(reference v)
     {
+        if(c.size() == 1)
+        {
+            c.clear();
+            return;
+        }
+
         // Wipe out what v was pointing to with content of last
         // node
         v = c.back();
@@ -181,7 +185,6 @@ public:
 #endif
     }
 
-#ifdef __cpp_rvalue_references
     template <class F>
     bool erase_if(F&& f)
     {
@@ -192,7 +195,6 @@ public:
         erase(*i);
         return true;
     }
-#endif
 };
 
 

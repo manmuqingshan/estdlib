@@ -13,7 +13,7 @@
 #define ESTD_CPP17_CONSTEXPR
 #endif
 
-#if __cplusplus >= 201402L
+#if __cpp_constexpr >= 201304L
 #define ESTD_CPP14_CONSTEXPR constexpr
 #else
 #define ESTD_CPP14_CONSTEXPR

@@ -237,8 +237,7 @@ TEST_CASE("priority-queue-test")
         pq.push(&d5);
         //pq.push(&d7);
 
-        // FIX: a nullptr makes its way into the mix here
-        //pq.erase_if([](const Dummy* d) { return d->val1 == 5; });
-        //pq.push(&d3);
+        pq.erase_if([](const Dummy* d) { return d->val1 == 5; });
+        pq.push(&d3);
     }
 }

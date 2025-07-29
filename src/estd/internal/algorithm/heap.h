@@ -89,11 +89,7 @@ struct heap
     }
 
     // push down
-#ifdef FEATURE_CPP_CONSTEXPR_METHOD
-    constexpr
-#endif
-
-    void restore_down(iterator_type current)
+    ESTD_CPP_CONSTEXPR(17) void restore_down(iterator_type current)
     {
         for(;;)
         {
@@ -156,11 +152,7 @@ struct heap
     }
 
 
-#ifdef FEATURE_CPP_CONSTEXPR_METHOD
-    constexpr
-#endif
-
-    void make()
+    ESTD_CPP_CONSTEXPR(17) void make()
     {
         int last_nonleaf_idx = (size() - 1) / k;
         // FIX: this is not sufficient, because restore_up doesn't evaluate all children
@@ -177,11 +169,11 @@ struct heap
 }
 
 template <class RandomIt, class Compare = less<typename iterator_traits<RandomIt>::value_type> >
-#ifdef FEATURE_CPP_CONSTEXPR_METHOD
-constexpr
-#endif
-void make_heap( RandomIt first, RandomIt last, Compare comp = Compare(), const int k = 2 )
+ESTD_CPP_CONSTEXPR(17) void make_heap(RandomIt first, RandomIt last,
+    Compare comp = Compare(), const int k = 2)
 {
+    if(last - first < 2)    return;
+
     internal::heap<RandomIt, Compare> heap(first, last, k, comp);
 
     heap.make();
