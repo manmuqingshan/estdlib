@@ -362,7 +362,10 @@ namespace layer1 {
 // Fixed in place singular buffer
 template <class T, size_t len,
     class Array = conditional_t<
-        is_integral<T>::value,
+        is_integral<T>::value
+#if FEATURE_ESTD_IS_TRIVIAL
+            || is_trivial<T>::value,
+#endif
         T[len],
         internal::uninitialized_array<T, len>>>
 #if __cpp_alias_templates

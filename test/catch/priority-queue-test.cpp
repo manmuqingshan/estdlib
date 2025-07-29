@@ -226,4 +226,19 @@ TEST_CASE("priority-queue-test")
 
         REQUIRE(pq.container().size() == 0);
     }
+    SECTION("erase (pointer)")
+    {
+        estd::layer1::priority_queue<Dummy*, 10> pq;
+
+        Dummy d3(3, "val3");
+        Dummy d5(5, "val5");
+        Dummy d7(7, "val7");
+
+        pq.push(&d5);
+        //pq.push(&d7);
+
+        // FIX: a nullptr makes its way into the mix here
+        //pq.erase_if([](const Dummy* d) { return d->val1 == 5; });
+        //pq.push(&d3);
+    }
 }
